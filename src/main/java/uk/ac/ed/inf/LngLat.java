@@ -7,12 +7,13 @@ public record LngLat(double lng, double lat) {
         return false;
     }
     public double distanceTo(LngLat other) {
-        //TODO implement dinstanceTo as euclidean distance between two points
-        return 0;
+        double deltaLng = this.lng - other.lng;
+        double deltaLat = this.lat - other.lat;
+        return Math.sqrt(deltaLng * deltaLng + deltaLat * deltaLat);
     }
     public boolean closeTo(LngLat other) {
         //TODO implement closeTo
-        return true;
+        return this.distanceTo(other) < 0.00015;
     }
     public LngLat nextPosition(CompassDirection direction) {
         //TODO implement nextPosition
