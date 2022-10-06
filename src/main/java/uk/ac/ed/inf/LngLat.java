@@ -12,7 +12,6 @@ public record LngLat(double lng, double lat) {
         return Math.sqrt(deltaLng * deltaLng + deltaLat * deltaLat);
     }
     public boolean closeTo(LngLat other) {
-        //TODO implement closeTo
         return this.distanceTo(other) < 0.00015;
     }
     public LngLat nextPosition(CompassDirection direction) {
