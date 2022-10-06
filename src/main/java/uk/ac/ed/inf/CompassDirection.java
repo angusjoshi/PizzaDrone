@@ -16,5 +16,15 @@ public enum CompassDirection {
     W,
     WNW,
     NW,
-    NNW,
+    NNW;
+
+
+    public int getAngle() {
+        //TODO implement getAngle
+
+
+        //maybe not use this; decide later.
+
+        return 0;
+    }
 }

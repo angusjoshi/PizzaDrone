@@ -18,13 +18,6 @@ public record LngLat(double lng, double lat) {
         //TODO implement nextPosition
         return new LngLat(0, 0);
     }
-    private enum CompassDirection {
-        //TODO fill rest of compassdirection options
-        NORTH,
-        SOUTH,
-        EAST,
-        WEST,
-    }
 }
 
 
