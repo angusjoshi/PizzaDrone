@@ -36,5 +36,22 @@ public class LngLatTest {
         var b = new LngLat(1.1, 0.9);
         assertFalse(a.closeTo(b));
     }
+    @Test
+    public void testNextPosition1() {
+        var a = new LngLat(0, 0);
+        var b = a.nextPosition(CompassDirection.E);
+        assertEquals(0.00015, b.lng(), 0);
+        assertEquals(0, b.lat(), 0);
+    }
+    @Test
+    public void testNextPosition2() {
+        var a = new LngLat(0, 0);
+        a = a.nextPosition(CompassDirection.NE);
+        a = a.nextPosition(CompassDirection.SW);
+        a = a.nextPosition(CompassDirection.ESE);
+        a = a.nextPosition(CompassDirection.WNW);
+        assertEquals(0, a.lng(), 1E-15);
+        assertEquals(0, a.lat(), 1E-15);
+    }
 
 }
