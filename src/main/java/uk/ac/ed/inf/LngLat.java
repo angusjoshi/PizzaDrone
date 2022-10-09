@@ -1,13 +1,17 @@
 package uk.ac.ed.inf;
 
-public record LngLat(double lng, double lat) {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latitude") double lat) {
 
     public static final double STEP_LENGTH = 0.00015;
     public boolean inCentralArea() {
         CentralArea centralArea = CentralArea.getInstance();
         LngLat farRight = new LngLat(centralArea.getMaxLongitude() + 0.01, this.lat());
 
-        LngLat[] centralVertices = centralArea.getLngLats();
+        var centralVertices = centralArea.getVertices();
 
         int edgeIntersections = 0;
         for(int i = 0; i < centralVertices.length; i++) {

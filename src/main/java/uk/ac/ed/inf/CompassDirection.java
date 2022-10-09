@@ -18,10 +18,10 @@ public enum CompassDirection {
     SE(14),
     ESE(15);
 
-    private LngLat unitStep;
+    private final LngLat unitStep;
 
-    CompassDirection(int ord){
-        double theta = (Math.PI / 8) * ord;
+    CompassDirection(int nSixteenths){
+        double theta = (Math.PI / 8) * nSixteenths;
         double x = Math.cos(theta);
         double y = Math.sin(theta);
         this.unitStep = new LngLat(x, y);
