@@ -1,5 +1,8 @@
 package uk.ac.ed.inf;
 
+/**
+ * enumeration for the directions on a 16 point compass
+ */
 public enum CompassDirection {
     E(0),
     ENE(1),
@@ -20,13 +23,24 @@ public enum CompassDirection {
 
     private final LngLat unitStep;
 
+    /**
+     * constructor for each compass direction.
+     * determines a vector for the unit step in the direction
+     * @param nSixteenths number of divisions of the direction in an anticlockwise direction
+     */
     CompassDirection(int nSixteenths){
         double theta = (Math.PI / 8) * nSixteenths;
         double x = Math.cos(theta);
         double y = Math.sin(theta);
         this.unitStep = new LngLat(x, y);
     }
+
+    /**
+     * multiplies the unit direction in the direction by whatever step length we are using
+     * @param stepLength length of the step
+     * @return vector with required length and direction
+     */
     public LngLat getOffset(double stepLength) {
-        return unitStep.mul(stepLength);
+        return unitStep.scale(stepLength);
     }
 }
