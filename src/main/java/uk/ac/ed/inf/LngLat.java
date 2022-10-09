@@ -25,6 +25,7 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
     }
 
     public static int isPathClockwise(LngLat a, LngLat b, LngLat c) {
+        //TODO: add handling for a == b or a == c cases (avoid division by 0).
         LngLat ca = a.sub(c);
         LngLat cb = b.sub(c);
         double k = ca.cross(cb);
