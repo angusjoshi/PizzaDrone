@@ -53,5 +53,85 @@ public class LngLatTest {
         assertEquals(0, a.lng(), 1E-15);
         assertEquals(0, a.lat(), 1E-15);
     }
+    @Test
+    public void testNextPosition3() {
+        var a = new LngLat(0, 0);
+        a = a.nextPosition(null);
+        assertEquals(0, a.lng(), 0);
+        assertEquals(0, a.lat(), 0);
+    }
+    @Test
+    public void testInCentralArea1() {
+        var p = new LngLat(-3.189135789871216,
+                55.944555845685876);
+        assertTrue(p.inCentralArea());
+    }
+    @Test
+    public void testInCentralArea2() {
+        var p = new LngLat(-3.2,
+                55.94460090635972);
+        assertFalse(p.inCentralArea());
+    }
+    @Test
+    public void testInCentralArea3() {
+        var p = new LngLat(-3.183,
+                55.94460090635972);
+        assertFalse(p.inCentralArea());
+    }
+    @Test
+    public void testPathClockwise4() {
+        var bus = new LngLat(-3.1878483,
+                55.9440151);
+        var kfc = new LngLat(-3.1878483,
+                55.9455382);
+        var at = App.APPLETON_TOWER;
+        var outside = new LngLat(-3.1875962018966675,
+                55.94460090635972);
+        assertEquals(1, LngLat.isPathClockwise(bus, kfc, outside));
+        assertEquals(-1, LngLat.isPathClockwise(bus, kfc, at));
+    }
+    @Test
+    public void testLineSegsIntersect3() {
+        var left = new LngLat(-3.1875962018966675,
+                55.94460090635972);
+        left = App.APPLETON_TOWER;
+        var right = new LngLat(-3.1875962018966675,
+                55.94460090635972);
+        var topRight = new LngLat(-3.1878483,
+                55.9455382);
+        var botRight = new LngLat(-3.1878483,
+                55.9440151);
+        assertTrue(LngLat.lineSegsIntersect(right, left, topRight, botRight));
+        assertFalse(LngLat.lineSegsIntersect(topRight, right, botRight, left));
+    }
+    @Test
+    public void testPathClockwise1() {
+        var p = new LngLat(0, 0);
+        var q = new LngLat(1, 1);
+        var r = new LngLat(1, 0);
 
+        assertEquals(1, LngLat.isPathClockwise(p, q, r));
+    }
+    @Test
+    public void testPathClockwise2() {
+        var p = new LngLat(0, 0);
+        var q = new LngLat(1, 0);
+        var r = new LngLat(1, 1);
+        assertEquals(-1, LngLat.isPathClockwise(p, q, r));
+    }
+    @Test
+    public void testPathClockwise3() {
+        var p = new LngLat(-3.184319, 55.9426);
+        var q = new LngLat(-3.184319, 55.9462);
+        var r = new LngLat(-3.187596, 55.9446);
+        assertEquals(-1, LngLat.isPathClockwise(p, q, r));
+    }
+    @Test
+    public void testLineSegsIntersect1() {
+        var p = new LngLat(0, 0);
+        var q = new LngLat(1, 0);
+        var r = new LngLat(0.5, 1);
+        var s = new LngLat(0.5, -1);
+        assertTrue(LngLat.lineSegsIntersect(p, q, r, s));
+    }
 }
