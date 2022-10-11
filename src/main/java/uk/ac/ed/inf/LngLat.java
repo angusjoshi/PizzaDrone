@@ -19,7 +19,8 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
 
     /**
      * Determines whether a LngLat instance is in the central area, as defined by
-     * the current instance of CentralArea.
+     * the current instance of CentralArea. Determine strict inclusion, i.e. a point on an edge
+     * is not counted to be included.
      * @return true if the point is in the central area, false otherwise
      */
     public boolean inCentralArea() {
@@ -35,7 +36,7 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
         for(int i = 0; i < centralVertices.length; i++) {
             var vertexOne = centralVertices[i];
             var vertexTwo = centralVertices[(i + 1) % centralVertices.length];
-            if(lineSegsIntersect(farRight, this,  vertexOne, vertexTwo)) {
+            if(lineSegmentsIntersect(farRight, this,  vertexOne, vertexTwo)) {
                 edgeIntersections++;
             }
         }
@@ -51,7 +52,6 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
      * @return 1 if cycle is clockwise, -1 if cycle is anticlockwise, 0 if the points are collinear
      */
     public static int isPathClockwise(LngLat a, LngLat b, LngLat c) {
-        //TODO: add handling for a == b or a == c cases (avoid division by 0).
         LngLat ca = a.sub(c);
         LngLat cb = b.sub(c);
         double k = ca.cross(cb);
@@ -69,7 +69,7 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
      * @param d line 2 end point
      * @return true if line segments intersect at exactly one point p, where p not in {a, b, c, d}
      */
-    public static boolean lineSegsIntersect(LngLat a, LngLat b, LngLat c, LngLat d) {
+    public static boolean lineSegmentsIntersect(LngLat a, LngLat b, LngLat c, LngLat d) {
 
         //consider cycles starting with one of the line segments, then including one of the vertices of the other line
         int abc = isPathClockwise(a, b, c);

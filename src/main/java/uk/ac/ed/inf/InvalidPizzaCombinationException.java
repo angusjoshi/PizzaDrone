@@ -5,5 +5,4 @@ package uk.ac.ed.inf;
  * if the entered pizza combination is not valid
  */
 public class InvalidPizzaCombinationException extends Throwable {
-    //TODO: maybe refactor InvalidPizzaCombinationException somewhere
 }

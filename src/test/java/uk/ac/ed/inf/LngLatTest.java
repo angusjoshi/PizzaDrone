@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -84,25 +85,20 @@ public class LngLatTest {
                 55.9440151);
         var kfc = new LngLat(-3.1878483,
                 55.9455382);
-        var at = App.APPLETON_TOWER;
+        var at = Constants.APPLETON_TOWER;
         var outside = new LngLat(-3.1875962018966675,
                 55.94460090635972);
         assertEquals(1, LngLat.isPathClockwise(bus, kfc, outside));
-        assertEquals(-1, LngLat.isPathClockwise(bus, kfc, at));
+        assertEquals(1, LngLat.isPathClockwise(bus, kfc, at));
     }
     @Test
     public void testLineSegsIntersect3() {
-        var left = new LngLat(-3.1875962018966675,
-                55.94460090635972);
-        left = App.APPLETON_TOWER;
-        var right = new LngLat(-3.1875962018966675,
-                55.94460090635972);
-        var topRight = new LngLat(-3.1878483,
-                55.9455382);
-        var botRight = new LngLat(-3.1878483,
-                55.9440151);
-        assertTrue(LngLat.lineSegsIntersect(right, left, topRight, botRight));
-        assertFalse(LngLat.lineSegsIntersect(topRight, right, botRight, left));
+        var top = new LngLat(-3.184319,55.946233);
+        var bot = new LngLat(-3.184319,55.942617);
+        var left = new LngLat(-3.1850, 55.9445);
+        var right = new LngLat(	-3.1832, 	55.9445);
+        assertTrue(LngLat.lineSegmentsIntersect(right, left, top, bot));
+        assertFalse(LngLat.lineSegmentsIntersect(top, right, bot, left));
     }
     @Test
     public void testPathClockwise1() {
@@ -132,6 +128,6 @@ public class LngLatTest {
         var q = new LngLat(1, 0);
         var r = new LngLat(0.5, 1);
         var s = new LngLat(0.5, -1);
-        assertTrue(LngLat.lineSegsIntersect(p, q, r, s));
+        assertTrue(LngLat.lineSegmentsIntersect(p, q, r, s));
     }
 }
