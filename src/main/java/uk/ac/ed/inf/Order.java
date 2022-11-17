@@ -1,11 +1,51 @@
 package uk.ac.ed.inf;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 
 /**
  * class to store a pizza order
  */
 public class Order {
+
+
+    @JsonProperty
+    private String orderNo;
+    @JsonProperty
+    private String orderDate;
+    @JsonProperty
+    private String customer;
+    @JsonProperty
+    private String creditCardNumber;
+    @JsonProperty
+    private String creditCardExpiry;
+    @JsonProperty
+    private String cvv;
+    @JsonProperty
+    private int priceTotalInPence;
+    @JsonProperty
+    private String[] orderItems;
+
+    private OrderOutcome orderOutcome;
+
+    public Order(String orderNo, String orderDate, String customer, String creditCardNumber, String creditCardExpiry,
+                 String cvv, int priceTotalInPence, String[] orderItems) {
+        this.orderNo = orderNo;
+        this.orderDate = orderDate;
+        this.customer = customer;
+        this.creditCardNumber = creditCardNumber;
+        this.creditCardExpiry = creditCardExpiry;
+        this.cvv = cvv;
+        this.priceTotalInPence = priceTotalInPence;
+        this.orderItems = orderItems;
+    }
+    private Order() {}
+
+
+    public void validateOrder() {
+
+    }
     /**
      * determine the cost of an order from a list of pizzas, and the data from the participating restaurants.
      * @param restaurants array of participating Restaurant instances

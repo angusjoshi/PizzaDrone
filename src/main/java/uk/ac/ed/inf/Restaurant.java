@@ -1,11 +1,6 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -35,29 +30,6 @@ public class Restaurant {
         this.menu = menu;
     }
 
-    /**
-     * make a request to the REST-API and attempt to deserialize the result into an array
-     * of Restaurant instances
-     * @param serverBaseAddress base address for the API
-     * @return array of restaurants retrieved from the restaurants API endpoint
-     */
-    public static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress) {
-        Restaurant[] restaurants;
-        URL restaurantsURL;
-        try {
-            restaurantsURL = new URL(serverBaseAddress, Constants.RESTAURANTS_EXTENSION);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        try {
-            restaurants = new ObjectMapper().readValue(restaurantsURL, Restaurant[].class);
-        } catch(IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return restaurants;
-    }
 
     /**
      * find if the menu for this restaurant contains a certain pizza
