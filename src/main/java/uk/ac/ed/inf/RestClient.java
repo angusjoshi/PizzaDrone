@@ -28,19 +28,18 @@ public class RestClient {
             orders = new ObjectMapper().readValue(ordersURL, Order[].class);
         } catch(IOException e) {
             e.printStackTrace();
-            orders = null;
+            orders = new Order[0];
         }
         return orders;
     }
     public Restaurant[] getRestaurantsFromRestServer() {
         Restaurant[] restaurants;
-        URL restaurantsURL;
         try{
-            restaurantsURL = new URL(baseURLString + RESTAURANTS_EXTENSION);
+            URL restaurantsURL = new URL(baseURLString + RESTAURANTS_EXTENSION);
             restaurants = new ObjectMapper().readValue(restaurantsURL, Restaurant[].class);
         } catch(IOException e) {
             e.printStackTrace();
-            restaurants = null;
+            restaurants = new Restaurant[0];
         }
         return restaurants;
     }
