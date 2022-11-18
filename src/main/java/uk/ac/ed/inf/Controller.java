@@ -1,6 +1,9 @@
 package uk.ac.ed.inf;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -10,9 +13,21 @@ public class Controller {
     private Restaurant[] restaurants;
     private Order[] orders;
 
+    private LocalDate currentDay;
+
     private final HashSet<String> possiblePizzas;
 
-    public Controller() {
+    public Controller(String currentDayString) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            currentDay = LocalDate.parse(currentDayString, formatter);
+        } catch(DateTimeParseException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
         retrieveDataFromRestServer();
         possiblePizzas = new HashSet<>();
     }
@@ -20,13 +35,22 @@ public class Controller {
     public void processOrders() {
         findAllPossiblePizzas();
         validateOrders();
-        System.out.println("Hehe, xd!");
+        System.out.println("Hehe!");
     }
     private void validateOrders() {
         Arrays.stream(orders).forEach(this::validateOrder);
     }
     private void validateOrder(Order order) {
-        order.validateCreditCard();
+
+        order.validateOrderDate(currentDay);
+
+        try {
+            order.validateCreditCard();
+        } catch(OrderDateNotValidatedException e) {
+            System.err.println(e.getMessage());
+            return;
+        }
+
 
         int numberOfPizzasInOrder = order.getOrderItems().length;
         if(numberOfPizzasInOrder < 1 || numberOfPizzasInOrder > ORDER_MAX_PIZZAS) {
@@ -50,13 +74,16 @@ public class Controller {
             return;
         }
 
-        order.setOrderOutcome(OrderOutcome.ValidButNotDelivered);
+        if(order.getOrderOutcome() == null) {
+            order.setOrderOutcome(OrderOutcome.ValidButNotDelivered);
+        }
     }
     private boolean allOrderedPizzasExist(Order order) {
         return Arrays.stream(order.getOrderItems())
-                .map(x -> possiblePizzas.contains(x))
+                .map(possiblePizzas::contains)
                 .reduce(true, (a, b) -> a && b);
     }
+
     private void retrieveDataFromRestServer() {
         RestClient restClient;
         try {
@@ -67,7 +94,7 @@ public class Controller {
             throw new RuntimeException(e);
         }
 
-        orders = restClient.getOrdersFromRestServer();
+        orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
         restaurants = restClient.getRestaurantsFromRestServer();
     }
 

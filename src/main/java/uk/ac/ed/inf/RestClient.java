@@ -21,6 +21,19 @@ public class RestClient {
         }
         this.baseURLString = normalisedURLString;
     }
+    public Order[] getOrdersFromRestServerOnDate(String date) {
+        Order[] orders;
+        try{
+            //TODO: improve slash handling for this URL creation
+            //TODO: deal with duplication between this and getOrdersFromRestServer()
+            URL ordersURL = new URL(baseURLString + ORDERS_EXTENSION + "/" + date);
+            orders = new ObjectMapper().readValue(ordersURL, Order[].class);
+        } catch(IOException e) {
+            e.printStackTrace();
+            orders = new Order[0];
+        }
+        return orders;
+    }
     public Order[] getOrdersFromRestServer() {
         Order[] orders;
         try{
