@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class CentralArea {
     private static CentralArea instance;
-    private static IPolygon centralAreaPolygon;
+    private IPolygon centralAreaPolygon;
     private CentralArea(URL apiURL) {
         LngLat[] vertices = null;
         try {
