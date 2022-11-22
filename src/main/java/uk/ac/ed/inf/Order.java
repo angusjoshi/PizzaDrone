@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.GenericValidator;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
-
 
 /**
  * class to store a pizza order
@@ -39,32 +34,11 @@ public class Order {
         this.priceTotalInPence = priceTotalInPence;
         this.orderItems = orderItems;
 
-        this.orderDate = parseDateString(orderDateString);
-        this.creditCardExpiry = parseCreditCardExpiry(cardExpiryString);
+        this.orderDate = DateParser.parseDateString(orderDateString);
+        this.creditCardExpiry = DateParser.parseCreditCardExpiry(cardExpiryString);
     }
 
-    private LocalDate parseCreditCardExpiry(String cardExpiryString) {
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .appendPattern("MM/yy")
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                .toFormatter();
 
-        try {
-            return LocalDate.parse(cardExpiryString, formatter);
-        } catch(DateTimeParseException e) {
-            return null;
-        }
-    }
-
-    private LocalDate parseDateString(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            return LocalDate.parse(dateString, formatter);
-        } catch(DateTimeParseException e) {
-            return null;
-        }
-    }
-    private Order() {}
 
     public void validateOrderDate(LocalDate currentDay) {
         if(orderDate == null) {

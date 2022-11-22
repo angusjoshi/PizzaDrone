@@ -2,7 +2,6 @@ package uk.ac.ed.inf;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,9 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class CentralArea {
     private static CentralArea instance;
-    private LngLat[] vertices;
-    private static double maxLongitude;
+    private static IPolygon centralAreaPolygon;
     private CentralArea(URL apiURL) {
+        LngLat[] vertices = null;
         try {
             vertices = new ObjectMapper().readValue(apiURL, LngLat[].class);
         } catch(IOException e) {
@@ -22,19 +21,9 @@ public class CentralArea {
         }
         if(vertices == null) return;
 
-        maxLongitude = Arrays.stream(vertices)
-                .map(LngLat::lng)
-                .max(Double::compareTo)
-                .orElse(null);
+        centralAreaPolygon = new Polygon(vertices);
     }
 
-    /**
-     * get the maximum longitude of all corners of the central area
-     * @return the maximum longitude across all corners of the bounding polygon
-     */
-    public double getMaxLongitude() {
-        return maxLongitude;
-    }
 
     /**
      * Lazily initialises the singleton instance as required
@@ -52,11 +41,7 @@ public class CentralArea {
         return instance;
     }
 
-    /**
-     * get the vertices of the central area in anti-clockwise order
-     * @return the vertices of the central area bounding polygon
-     */
-    public LngLat[] getVertices() {
-        return this.vertices;
+    public boolean isPointInCentralArea(LngLat point) {
+        return centralAreaPolygon.isPointInside(point);
     }
 }

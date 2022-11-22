@@ -25,23 +25,7 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
      */
     public boolean inCentralArea() {
         CentralArea centralArea = CentralArea.getInstance();
-
-        //farRight is taken to be a point we know isn't in the central area
-        LngLat farRight = new LngLat(centralArea.getMaxLongitude() + 0.01, this.lat());
-
-        var centralVertices = centralArea.getVertices();
-
-        //count intersections of line between this and farRight with edges of the central area
-        int edgeIntersections = 0;
-        for(int i = 0; i < centralVertices.length; i++) {
-            var vertexOne = centralVertices[i];
-            var vertexTwo = centralVertices[(i + 1) % centralVertices.length];
-            if(lineSegmentsIntersect(farRight, this,  vertexOne, vertexTwo)) {
-                edgeIntersections++;
-            }
-        }
-        //  odd number of intersections iff point in the central area
-        return edgeIntersections % 2 == 1;
+        return centralArea.isPointInCentralArea(this);
     }
 
     /**
@@ -152,6 +136,21 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
     public LngLat nextPosition(CompassDirection direction) {
         if(direction == null) return this;
         return this.add(direction.getOffset(STEP_LENGTH));
+    }
+
+    /**
+     * Round the longitude and latitude of this to the nearest multiple of the STEP_LENGTH unit
+     * @return A new LngLat instance with the rounded values.
+     */
+    public LngLat roundToNearestStep() {
+        var newLng = this.lng() - (this.lng() % STEP_LENGTH);
+        var newLat = this.lat() - (this.lat() % STEP_LENGTH);
+
+        //add half a step so we are rounding to the centre of the grid square rather than the bottom left.
+        newLng += STEP_LENGTH / 2;
+        newLat += STEP_LENGTH / 2;
+
+        return new LngLat(newLng, newLat);
     }
 }
 

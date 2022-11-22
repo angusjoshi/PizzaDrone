@@ -130,4 +130,22 @@ public class LngLatTest {
         var s = new LngLat(0.5, -1);
         assertTrue(LngLat.lineSegmentsIntersect(p, q, r, s));
     }
+
+    @Test
+    public void testRoundPoint() {
+        var pointToRound = new LngLat(0.0001, 0.0001);
+        var roundedPoint = pointToRound.roundToNearestStep();
+
+        assertEquals(0.000075, roundedPoint.lat(), 0);
+        assertEquals(0.000075, roundedPoint.lng(), 0);
+    }
+
+    @Test
+    public void testRoundPoint2() {
+        var pointToRound = new LngLat(0.00015, 0.00015);
+        var roundedPoint = pointToRound.roundToNearestStep();
+
+        assertEquals(0.000225, roundedPoint.lng(), 0);
+        assertEquals(0.000225, roundedPoint.lat(), 0);
+    }
 }
