@@ -22,6 +22,7 @@ public enum CompassDirection {
     ESE(15);
 
     private final LngLat unitStep;
+    private final double theta;
 
     /**
      * constructor for each compass direction.
@@ -32,7 +33,9 @@ public enum CompassDirection {
         double theta = (Math.PI / 8) * nSixteenths;
         double x = Math.cos(theta);
         double y = Math.sin(theta);
+
         this.unitStep = new LngLat(x, y);
+        this.theta = theta;
     }
 
     /**

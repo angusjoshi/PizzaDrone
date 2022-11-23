@@ -51,12 +51,13 @@ public class Polygon implements IPolygon {
 
         this.boundingRectangle = new Rectangle(boundingRectangleTopLeft, boundingRectangleTopRight);
 
-        this.outsidePolygon = new LngLat(maxLng + 0.005, (maxLat - minLat) / 2);
+        this.outsidePolygon = new LngLat(maxLng + LngLat.STEP_LENGTH, minLat + ((maxLat - minLat) / 2));
     }
 
     @Override
     public boolean isPointInside(LngLat point) {
-        if(!boundingRectangle.isPointInside(point)) {
+        return boundingRectangle.isPointInside(point);
+        /*if(!boundingRectangle.isPointInside(point)) {
             return false;
         }
         LngLat roundedPoint = point.roundToNearestStep();
@@ -80,7 +81,7 @@ public class Polygon implements IPolygon {
         boolean pointIsInside = edgeIntersections % 2 == 1;
 
         checkedPoints.put(roundedPoint, pointIsInside);
-        return pointIsInside;
+        return pointIsInside;*/
     }
 
 

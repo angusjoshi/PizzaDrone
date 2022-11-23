@@ -11,8 +11,10 @@ public class Rectangle implements IPolygon {
 
     @Override
     public boolean isPointInside(LngLat point) {
-        boolean inVerticalRange = point.lat() >= topLeft.lat() && point.lat() <= bottomRight.lat();
-        boolean inHorizontalRange = point.lng() >= topLeft.lng() && point.lng() <= bottomRight.lng();
+        boolean inVerticalRange = point.lat() >= topLeft.lat() - LngLat.STEP_LENGTH
+                && point.lat() <= bottomRight.lat() + LngLat.STEP_LENGTH;
+        boolean inHorizontalRange = point.lng() >= topLeft.lng() - LngLat.STEP_LENGTH
+                && point.lng() <= bottomRight.lng() + LngLat.STEP_LENGTH;
         return inVerticalRange && inHorizontalRange;
     }
 }

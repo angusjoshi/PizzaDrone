@@ -53,4 +53,8 @@ public class Restaurant {
                 .filter(menu -> menu.name().equals(pizza))
                 .findAny();
     }
+
+    public LngLat getLngLat() {
+        return this.lngLat;
+    }
 }

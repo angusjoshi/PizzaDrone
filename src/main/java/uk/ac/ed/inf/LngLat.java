@@ -152,6 +152,17 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
 
         return new LngLat(newLng, newLat);
     }
+    public double chebyshevDistance(LngLat other) {
+        double latDistance = Math.abs(this.lat() - other.lat());
+        double lngDistance = Math.abs(this.lng() - other.lng());
+        return Math.max(latDistance, lngDistance);
+    }
+    public double[] toCoordinates() {
+        double[] coordinates = new double[2];
+        coordinates[0] = this.lng();
+        coordinates[1] = this.lat();
+        return coordinates;
+    }
 }
 
 
