@@ -6,7 +6,7 @@ public class NoFlyZone extends Polygon {
 
     private String name;
 
-    public NoFlyZone(@JsonProperty String name, @JsonProperty double[][] coordindates) {
+    public NoFlyZone(@JsonProperty("name") String name, @JsonProperty("coordinates") double[][] coordindates) {
         super(coordindates);
         this.name = name;
     }

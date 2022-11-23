@@ -9,6 +9,8 @@ public class RestClient {
     public static final String RESTAURANTS_EXTENSION = "restaurants";
     public static final String ORDERS_EXTENSION = "orders";
     public static final String TEST_EXTENSION = "test/HelloWorld";
+    public static final String CENTRAL_AREA_EXTENSION = "centralArea";
+    public static final String NO_FLY_ZONES_EXTENSION = "noFlyZones";
     protected String baseURLString;
 
 
@@ -55,5 +57,26 @@ public class RestClient {
             restaurants = new Restaurant[0];
         }
         return restaurants;
+    }
+    public LngLat[] getCentralAreaVerticesFromRestServer() {
+        LngLat[] vertices = null;
+        try {
+            URL centralAreaURL = new URL(baseURLString + CENTRAL_AREA_EXTENSION);
+            vertices = new ObjectMapper().readValue(centralAreaURL, LngLat[].class);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return vertices;
+    }
+    public NoFlyZone[] getNoFlyZonesFromRestServer() {
+        NoFlyZone[] noFlyZones = null;
+        try {
+            URL centralAreaURL = new URL(baseURLString + NO_FLY_ZONES_EXTENSION);
+            noFlyZones = new ObjectMapper().readValue(centralAreaURL, NoFlyZone[].class);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return noFlyZones;
     }
 }

@@ -1,9 +1,6 @@
 package uk.ac.ed.inf;
 
 import java.io.IOException;
-import java.net.URL;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Singleton class for retrieving and storing the central area polygon
@@ -14,16 +11,10 @@ public class CentralArea extends Polygon {
     private CentralArea(LngLat[] vertices) {
         super(vertices);
     }
-    private static CentralArea centralAreaFactory(URL apiURL) {
-        LngLat[] vertices = null;
-        try {
-            vertices = new ObjectMapper().readValue(apiURL, LngLat[].class);
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-        if(vertices == null) {
-            return null;
-        }
+    private static CentralArea centralAreaFactory() throws IOException, BadTestResponseException {
+        RestClient restClient = new RestClient(Constants.API_BASE);
+
+        LngLat[] vertices = restClient.getCentralAreaVerticesFromRestServer();
         return new CentralArea(vertices);
     }
 
@@ -35,9 +26,10 @@ public class CentralArea extends Polygon {
      */
     public static CentralArea getInstance() {
         if(instance == null) {
+            //TODO: improve error handling here
             try{
-                instance = centralAreaFactory(new URL(Constants.API_BASE + Constants.CENTRAL_AREA_EXTENSION));
-            } catch(IOException e) {
+                instance = centralAreaFactory();
+            } catch(IOException | BadTestResponseException e) {
                 e.printStackTrace();
             }
         }
