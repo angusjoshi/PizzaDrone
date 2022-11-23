@@ -11,7 +11,26 @@ public class Polygon implements IPolygon {
     private LngLat[] vertices;
     private HashMap<LngLat, Boolean> checkedPoints;
 
+    public Polygon(double[][] coordinates) {
+        this.vertices = new LngLat[coordinates.length];
+        for(int i = 0; i < coordinates.length; i++) {
+            this.vertices[i] = new LngLat(coordinates[i][0], coordinates[i][1]);
+        }
+
+        processVertices();
+
+        this.checkedPoints = new HashMap<>();
+    }
+
     public Polygon(LngLat[] vertices) {
+        this.vertices = vertices;
+
+        processVertices();
+
+        this.checkedPoints = new HashMap<>();
+    }
+
+    private void processVertices() {
         if(vertices.length == 0) {
             return;
         }
@@ -33,9 +52,6 @@ public class Polygon implements IPolygon {
         this.boundingRectangle = new Rectangle(boundingRectangleTopLeft, boundingRectangleTopRight);
 
         this.outsidePolygon = new LngLat(maxLng + 0.005, (maxLat - minLat) / 2);
-
-        this.checkedPoints = new HashMap<>();
-        this.vertices = vertices;
     }
 
     @Override

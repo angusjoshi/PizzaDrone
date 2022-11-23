@@ -25,7 +25,7 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
      */
     public boolean inCentralArea() {
         CentralArea centralArea = CentralArea.getInstance();
-        return centralArea.isPointInCentralArea(this);
+        return centralArea.isPointInside(this);
     }
 
     /**
