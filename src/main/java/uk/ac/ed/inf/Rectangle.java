@@ -15,6 +15,7 @@ public class Rectangle implements IPolygon {
                 && point.lat() <= bottomRight.lat() + LngLat.STEP_LENGTH;
         boolean inHorizontalRange = point.lng() >= topLeft.lng() - LngLat.STEP_LENGTH
                 && point.lng() <= bottomRight.lng() + LngLat.STEP_LENGTH;
+        //TODO: make this cleaner
         return inVerticalRange && inHorizontalRange;
     }
 }

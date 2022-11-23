@@ -82,6 +82,9 @@ public class Polygon implements IPolygon {
 
         checkedPoints.put(roundedPoint, pointIsInside);
         return pointIsInside;*/
+        //TODO: revisit polygon inclusion checking.
+        //could be that bounded rectangle is best, or maybe even check for line intersections
+        //between line seg formed by move and the edges (this would require significant redesign)
     }
 
 
