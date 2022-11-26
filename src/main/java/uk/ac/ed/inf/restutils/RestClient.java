@@ -13,17 +13,30 @@ import java.net.URL;
  * Class to make requests to the rest server and deserialise into useful forms.
  */
 public class RestClient {
-    public static final String RESTAURANTS_EXTENSION = "restaurants";
-    public static final String ORDERS_EXTENSION = "orders";
-    public static final String TEST_EXTENSION = "test/HelloWorld";
-    public static final String CENTRAL_AREA_EXTENSION = "centralArea";
-    public static final String NO_FLY_ZONES_EXTENSION = "noFlyZones";
-    protected String baseURLString;
+    private static final String RESTAURANTS_EXTENSION = "restaurants";
+    private static final String ORDERS_EXTENSION = "orders";
+    private static final String TEST_EXTENSION = "test/HelloWorld";
+    private static final String CENTRAL_AREA_EXTENSION = "centralArea";
+    private static final String NO_FLY_ZONES_EXTENSION = "noFlyZones";
+    private final String baseURLString;
 
     private static RestClient instance;
+
+    /**
+     * Initialises the rest client instance
+     * @param baseURLString The base string for the rest client.
+     * @throws IOException If the URL string is malformed, or if there is an error with making a request
+     * to the rest client
+     * @throws BadTestResponseException If the test response from the rest client is not as expected.
+     */
     public static void initialiseRestClient(String baseURLString) throws IOException, BadTestResponseException {
         instance = new RestClient(baseURLString);
     }
+
+    /**
+     * Gets the instance of the rest client.
+     * @return the instance of the rest client
+     */
     public static RestClient getInstance() {
         if(instance == null) {
             System.err.println("Rest client must be initialised before accessing!");
@@ -31,13 +44,6 @@ public class RestClient {
         }
         return instance;
     }
-    /**
-     * Initialises the RestClient class. Also makes a call to the test endpoint on the API to ensure
-     * all is working correctly.
-     * @param baseURLString The base URL string for the API (e.g. "https://ilp-rest.azurewebsites.net")
-     * @throws BadTestResponseException If the request to the test endpoint doesn't behave as expected
-     * @throws IOException If there is an error with forming the URL, or making the request to the API
-     */
     private RestClient(String baseURLString) throws BadTestResponseException, IOException {
         String normalisedURLString = baseURLString.endsWith("/") ? baseURLString : baseURLString + "/";
         URL testURL = new URL(normalisedURLString + TEST_EXTENSION);

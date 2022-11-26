@@ -6,16 +6,27 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 
+/**
+ * Class with some static methods for parsing date strings into LocalDate types
+ */
 public class DateParser {
 
-    public static LocalDate parseDateString(String dateString) {
+    /**
+     * Parses a string in the form "yyyy-MM-dd" to a LocalDate type
+     * @param dateString the date string
+     * @return the date as a LocalDate
+     */
+    public static LocalDate parseDateString(String dateString) throws DateTimeParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            return LocalDate.parse(dateString, formatter);
-        } catch(DateTimeParseException e) {
-            return null;
-        }
+        return LocalDate.parse(dateString, formatter);
     }
+
+    /**
+     * Parses a credit card expiry date in the form "MM/yy". The day in the date is set to be
+     * the first of the month.
+     * @param cardExpiryString The credit card expiry date as a string
+     * @return The date parsed as a LocalDate
+     */
     public static LocalDate parseCreditCardExpiry(String cardExpiryString) {
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .appendPattern("MM/yy")

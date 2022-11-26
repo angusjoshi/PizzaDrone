@@ -8,7 +8,7 @@ import uk.ac.ed.inf.areas.NoFlyZones;
 import java.util.*;
 
 /**
- * Class to find a path between appleton tower and a given restaurant.
+ * Singleton class storing the pathfinder mechanism
  */
 public class PathFinder {
     /**
@@ -20,7 +20,7 @@ public class PathFinder {
     private final HashMap<Restaurant, List<Move>> pathsAlreadyComputed;
 
     /**
-     * Basic initialiser for the pathfinder
+     * Lazily initialises the pathfinder, and returns the instance
      */
     public static PathFinder getInstance() {
         if(instance == null) {
@@ -35,8 +35,9 @@ public class PathFinder {
 
     /**
      * Finds a path from appleton tower to a given restaurant.
-     * @param restaurant
-     * @return
+     * @param restaurant The restaurant to path to
+     * @param orderNo The order number
+     * @return The list of moves to a restaurant
      */
     public List<Move> findPathToRestaurant(Restaurant restaurant, String orderNo) {
         if(pathsAlreadyComputed.containsKey(restaurant)) {
@@ -47,7 +48,8 @@ public class PathFinder {
         pathsAlreadyComputed.put(restaurant, path);
         return path;
     }
-    protected List<Move> findPath(LngLat source, LngLat destination, String orderNo) {
+
+    private List<Move> findPath(LngLat source, LngLat destination, String orderNo) {
         seenBefore.clear();
         CentralArea centralArea = CentralArea.getInstance();
         NoFlyZones noFlyZones = NoFlyZones.getInstance();

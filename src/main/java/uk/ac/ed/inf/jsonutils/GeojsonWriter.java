@@ -12,18 +12,27 @@ import java.util.List;
 
 
 public class GeojsonWriter {
+    /**
+     * Writes a list of orders to a geojson in the working directory in the required format.
+     * The filename will be in the form "drone-YYYY_MM_dd.geojson"
+     * @param ordersToDeliver The list of orders that are to be delivered. Orders must be computed prior with
+     *                        the appropriate method in each order instance
+     * @param currentDayString The current day date string
+     */
     public static void writeDeliveryPathToGeojson(List<Order> ordersToDeliver, String currentDayString) {
         List<Move> flightPath = Move.getFlightPath(ordersToDeliver);
         var coordinates =  flightPath.stream()
                 .map(Move::fromAsCoordinates).toArray();
 
+        //Fill up the objects to be written
         LineString lineString = new LineString(coordinates);
         Feature feature = new Feature(lineString);
         Feature[] features = new Feature[1];
         features[0] = feature;
         FeatureCollection featureCollection = new FeatureCollection(features);
+
         ObjectMapper objectMapper = new ObjectMapper();
-        String fileName = "drone-" + currentDayString + ".json";
+        String fileName = "drone-" + currentDayString + ".geojson";
         try {
             objectMapper.writeValue(Paths.get(fileName).toFile(), featureCollection);
         } catch (IOException e) {
@@ -32,6 +41,9 @@ public class GeojsonWriter {
     }
 }
 
+/**
+ * class structure for writing to the geojson
+ */
 class FeatureCollection {
     String type;
     private Feature[] features;
@@ -48,6 +60,10 @@ class FeatureCollection {
         return this.features;
     }
 }
+
+/**
+ * class structure for writing to the geojson
+ */
 class Feature {
     private String type;
     private LineString geometry;
@@ -68,6 +84,10 @@ class Feature {
         return this.geometry;
     }
 }
+
+/**
+ * class structure for witing to the geojson
+ */
 class LineString {
     private Object[] coordinates;
     private String type;
@@ -83,6 +103,10 @@ class LineString {
         return this.type;
     }
 }
+
+/**
+ * class structure for writing to the geojson
+ */
 @JsonSerialize
 class Properties {
     public Properties(){}

@@ -1,65 +1,68 @@
 package uk.ac.ed.inf.order;
 
-import uk.ac.ed.inf.restutils.BadTestResponseException;
 import uk.ac.ed.inf.restutils.RestClient;
 
-import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Class to be instantiated, providing order validation functionality.
+ */
 public class OrderValidator {
     private static final int ORDER_MAX_PIZZAS = 4;
     private static final int EXTRA_DELIVERY_COST_IN_PENCE = 100;
-    private final LocalDate currentDay;
+    private LocalDate currentDay;
     private Restaurant[] restaurants;
     private Order[] orders;
     private final HashSet<String> possiblePizzas;
 
 
+    /**
+     * Initialises the orderValidator
+     * @param currentDayString The day that we require orders for
+     */
     public OrderValidator(String currentDayString) {
-        this.currentDay = DateParser.parseDateString(currentDayString);
+        try{
+            this.currentDay = DateParser.parseDateString(currentDayString);
+        } catch(DateTimeParseException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
         this.possiblePizzas = new HashSet<>();
         this.orders = null;
         this.restaurants = null;
     }
-    public List<Order> getValidatedOrders() {
-        try{
-            retrieveDataFromRestServer();
-        } catch(DayNotValidException | BadTestResponseException | IOException e) {
-            e.printStackTrace();
-            System.exit(2);
-        }
 
+    /**
+     * Gets the validated orders
+     * @return A list of validated orders, on the date specified in the constructor call.
+     */
+    public List<Order> getValidatedOrders() {
+        retrieveDataFromRestServer();
         validateOrders();
         return new ArrayList<>(Arrays.asList(orders));
     }
-    public void retrieveDataFromRestServer() throws DayNotValidException, BadTestResponseException, IOException {
+
+    private void retrieveDataFromRestServer() {
         if(currentDay == null) {
-            throw new DayNotValidException();
+            throw new RuntimeException();
         }
         RestClient restClient = RestClient.getInstance();
 
         orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
         restaurants = restClient.getRestaurantsFromRestServer();
     }
-    public void validateOrders() {
+    private void validateOrders() {
         findAllPossiblePizzas();
         Arrays.stream(orders).forEach(this::validateOrder);
     }
     private void validateOrder(Order order) {
-
         order.validateOrderDate(currentDay);
-
-        try {
-            order.validateCreditCard();
-        } catch(OrderDateNotValidatedException e) {
-            System.err.println(e.getMessage());
-            return;
-        }
-
+        order.validateCreditCard();
 
         int numberOfPizzasInOrder = order.getOrderItems().length;
         if(numberOfPizzasInOrder < 1 || numberOfPizzasInOrder > ORDER_MAX_PIZZAS) {

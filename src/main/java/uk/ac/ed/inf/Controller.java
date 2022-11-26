@@ -5,7 +5,6 @@ import uk.ac.ed.inf.jsonutils.JSONWriter;
 import uk.ac.ed.inf.order.Order;
 import uk.ac.ed.inf.order.OrderValidator;
 import uk.ac.ed.inf.pathing.CalculationTimer;
-import uk.ac.ed.inf.pathing.PathFinder;
 import uk.ac.ed.inf.restutils.BadTestResponseException;
 import uk.ac.ed.inf.restutils.RestClient;
 
@@ -14,15 +13,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Main controller for the application
+ */
 public class Controller {
-    public static int MOVE_CAPACITY = 2000;
+    private static final int MOVE_CAPACITY = 2000;
 
     private final String apiString;
     private final String currentDayString;
+
+    /**
+     * Constructor for the controller
+     * @param apiString The api string to be used
+     * @param currentDayString The current day string to be used
+     */
     public Controller(String apiString, String currentDayString) {
         this.apiString = apiString;
         this.currentDayString = currentDayString;
     }
+
+    /**
+     * Processes order validation, pathfinding and file output for all orders on the required day
+     */
     public void processDay() {
         try {
             RestClient.initialiseRestClient(apiString);
@@ -47,10 +59,11 @@ public class Controller {
         GeojsonWriter.writeDeliveryPathToGeojson(ordersToDeliver, currentDayString);
 
     }
-    public void deliverOrders(List<Order> ordersToDeliver) {
+
+    private void deliverOrders(List<Order> ordersToDeliver) {
         ordersToDeliver.forEach(Order::deliver);
     }
-    public List<Order> chooseOrdersToBeDelivered(List<Order> orders) {
+    private List<Order> chooseOrdersToBeDelivered(List<Order> orders) {
         CalculationTimer.startCalculationTimer();
         List<Order> ordersToDeliver = new ArrayList<>();
         for(var order : orders) {
@@ -59,10 +72,12 @@ public class Controller {
                 ordersToDeliver.add(order);
             }
         }
+        //Orders are sorted in order of moves per pizza delivered
         Collections.sort(ordersToDeliver);
         int movesLeft = MOVE_CAPACITY;
         List<Order> chosenOrdersToDeliver = new ArrayList<>();
         for(var order : ordersToDeliver) {
+            //greedily choose the orders with the best move to pizza ratio
             if(order.pathLength() > movesLeft) {
                 break;
             }
@@ -72,17 +87,3 @@ public class Controller {
         return chosenOrdersToDeliver;
     }
 }
-//going to have a collection of orders which take a certain number of moves to fulfill and yield a certain number
-//of pizzas. need to optimize the number of pizzas delivered within 2000 moves.
-
-//remember we need to hover once at the restaurant, and once at AT.
-
-//there is an obvious greedy soln, where we just take the orders with the most pizzas first.
-
-//I think the optimal soln is with dynamic programming though.
-
-//there is a greedy soln where we just find an 'pizzas per move' number and take the highest. This might actually
-//work very close to optimally as well, because we will be fulfilling a decent number of orders (around 20 I think?)
-//it's going to be very biased against the restaurants far away though, but in the spec we are just trying to optimize
-//number of pizzas delivered so I don't think it matters
-

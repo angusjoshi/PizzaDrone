@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.order;
 
+/**
+ * enum to store all the possible order outcomes.
+ */
 public enum OrderOutcome {
     Delivered ,
     ValidButNotDelivered ,

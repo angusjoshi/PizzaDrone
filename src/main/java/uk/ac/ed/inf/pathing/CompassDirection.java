@@ -49,6 +49,10 @@ public enum CompassDirection {
         return unitStep.scale(stepLength);
     }
 
+    /**
+     * Gets a compass direction pointing exactly opposite to this one
+     * @return the opposite compass direction
+     */
     public CompassDirection getOppositeDirection() {
         return switch (this) {
             case N -> S;
@@ -71,9 +75,16 @@ public enum CompassDirection {
         };
     }
 
-    public double getAngleAsDegrees() {
+    private double getAngleAsDegrees() {
         return theta;
     }
+
+    /**
+     * Static method to get the angle associated with a compass direction.
+     * This method is static so null directions call be dealt with nicely.
+     * @param direction The direction to check, can be null
+     * @return the angle in degrees as a Double object (not primitive)
+     */
     public static Double getAngleAsDegrees(CompassDirection direction) {
         if(direction == null) {
             return null;

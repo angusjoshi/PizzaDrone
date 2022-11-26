@@ -140,7 +140,8 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
     }
 
     /**
-     * Round the longitude and latitude of this to the nearest multiple of the STEP_LENGTH unit
+     * Rounds the LngLat to the centre of the grid square it is in, where
+     * each grid square is of size STEP_LENGTH.
      * @return A new LngLat instance with the rounded values.
      */
     public LngLat roundToNearestStep() {
@@ -152,17 +153,6 @@ public record LngLat(@JsonProperty("longitude") double lng, @JsonProperty("latit
         newLat += STEP_LENGTH / 2;
 
         return new LngLat(newLng, newLat);
-    }
-    public double chebyshevDistance(LngLat other) {
-        double latDistance = Math.abs(this.lat() - other.lat());
-        double lngDistance = Math.abs(this.lng() - other.lng());
-        return Math.max(latDistance, lngDistance);
-    }
-    public double[] toCoordinates() {
-        double[] coordinates = new double[2];
-        coordinates[0] = this.lng();
-        coordinates[1] = this.lat();
-        return coordinates;
     }
 }
 
