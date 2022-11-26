@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.pathing;
 
-import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.LngLat;
 import uk.ac.ed.inf.order.Order;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public record Move(String orderNo, LngLat from, LngLat to,
         List<Move> flightPath = new ArrayList<>();
         ordersToDeliver.stream()
                 .map(Order::getDeliveryPath)
-                .forEach(deliveryPath -> flightPath.addAll(deliveryPath));
+                .forEach(flightPath::addAll);
         return flightPath;
     }
 }

@@ -1,8 +1,5 @@
 package uk.ac.ed.inf.areas;
 
-import uk.ac.ed.inf.LngLat;
-import uk.ac.ed.inf.areas.IPolygon;
-
 /**
  * Class to represent a rectangle in the LngLat space. The rectangle can only be oriented
  * with it's base parallel to the longitudinal dimension.
@@ -29,11 +26,8 @@ public class Rectangle implements IPolygon {
      */
     @Override
     public boolean isPointInside(LngLat point) {
-        boolean inVerticalRange = point.lat() >= topLeft.lat() - LngLat.STEP_LENGTH
-                && point.lat() <= bottomRight.lat() + LngLat.STEP_LENGTH;
-        boolean inHorizontalRange = point.lng() >= topLeft.lng() - LngLat.STEP_LENGTH
-                && point.lng() <= bottomRight.lng() + LngLat.STEP_LENGTH;
-        //TODO: make this cleaner
+        boolean inVerticalRange = point.lat() >= topLeft.lat() && point.lat() <= bottomRight.lat();
+        boolean inHorizontalRange = point.lng() >= topLeft.lng() && point.lng() <= bottomRight.lng();
         return inVerticalRange && inHorizontalRange;
     }
 }

@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.pathing;
 
-import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.LngLat;
 import uk.ac.ed.inf.order.Restaurant;
 import uk.ac.ed.inf.areas.CentralArea;
 import uk.ac.ed.inf.areas.NoFlyZones;
@@ -16,8 +16,8 @@ public class PathFinder {
      */
     public static final LngLat APPLETON_TOWER = new LngLat(-3.186874, 55.944494);
     private static PathFinder instance;
-    private HashSet<LngLat> seenBefore;
-    private HashMap<Restaurant, List<Move>> pathsAlreadyComputed;
+    private final HashSet<LngLat> seenBefore;
+    private final HashMap<Restaurant, List<Move>> pathsAlreadyComputed;
 
     /**
      * Basic initialiser for the pathfinder
@@ -55,8 +55,6 @@ public class PathFinder {
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
         nodes.add(new SearchNode(source, 0, 0, null, null, 0, orderNo));
 
-        SearchNode finalSearchNode = null;
-
         while(true) {
             SearchNode currentNode = nodes.remove();
 
@@ -64,24 +62,22 @@ public class PathFinder {
                 return null;
             }
             if(currentNode.getLocation().closeTo(destination)) {
-                finalSearchNode = currentNode;
-                break;
+                return currentNode.toMoveList();
             }
             SearchNode[] potentialNextNodes = currentNode.getNextPotentialNodes(destination);
             Arrays.sort(potentialNextNodes);
             for(var potentialNextNode : potentialNextNodes) {
-                LngLat roundedLocation = potentialNextNode.getLocation().roundToNearestStep();
+                var roundedLocation = potentialNextNode.getLocation().roundToNearestStep();
                 if(seenBefore.contains(roundedLocation)) {
                     continue;
                 }
-                if(!centralArea.isPointInside(roundedLocation) || !noFlyZones.pointIsInNoFlyZone(roundedLocation)) {
+                var location = potentialNextNode.getLocation();
+                if(!centralArea.isPointInside(location) || !noFlyZones.pointIsInNoFlyZone(location)) {
                     nodes.add(potentialNextNode);
                     seenBefore.add(roundedLocation);
                 }
             }
         }
-
-        return finalSearchNode.toMoveArray();
     }
 
 }

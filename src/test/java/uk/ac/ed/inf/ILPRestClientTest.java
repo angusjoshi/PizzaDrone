@@ -11,18 +11,21 @@ import java.io.IOException;
 public class ILPRestClientTest {
     @Test
     public void testClientInitialisation() throws BadTestResponseException, IOException {
-        RestClient restClient = new RestClient(Constants.API_BASE);
+        RestClient.initialiseRestClient(Constants.API_BASE);
+        RestClient restClient = RestClient.getInstance();
     }
 
     @Test
     public void testGetOrders() throws BadTestResponseException, IOException {
-        RestClient restClient = new RestClient(Constants.API_BASE);
+        RestClient.initialiseRestClient(Constants.API_BASE);
+        RestClient restClient = RestClient.getInstance();
         Order[] orders = restClient.getOrdersFromRestServer();
         assert(orders.length > 0);
     }
     @Test
     public void testGetRestaurants() throws BadTestResponseException, IOException {
-         RestClient restClient = new RestClient(Constants.API_BASE);
+        RestClient.initialiseRestClient(Constants.API_BASE);
+        RestClient restClient = RestClient.getInstance();
          Restaurant[] restaurants = restClient.getRestaurantsFromRestServer();
          assert (restaurants.length > 0);
     }

@@ -13,15 +13,13 @@ import java.util.List;
 public class OrderValidator {
     private static final int ORDER_MAX_PIZZAS = 4;
     private static final int EXTRA_DELIVERY_COST_IN_PENCE = 100;
-    private LocalDate currentDay;
-    private String apiString;
+    private final LocalDate currentDay;
     private Restaurant[] restaurants;
     private Order[] orders;
     private final HashSet<String> possiblePizzas;
 
 
-    public OrderValidator(String apiString, String currentDayString) {
-        this.apiString = apiString;
+    public OrderValidator(String currentDayString) {
         this.currentDay = DateParser.parseDateString(currentDayString);
         this.possiblePizzas = new HashSet<>();
         this.orders = null;
@@ -42,14 +40,7 @@ public class OrderValidator {
         if(currentDay == null) {
             throw new DayNotValidException();
         }
-        RestClient restClient;
-        try {
-            restClient = new RestClient(apiString);
-        } catch (BadTestResponseException e) {
-            throw new BadTestResponseException();
-        } catch (IOException e) {
-            throw new IOException();
-        }
+        RestClient restClient = RestClient.getInstance();
 
         orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
         restaurants = restClient.getRestaurantsFromRestServer();

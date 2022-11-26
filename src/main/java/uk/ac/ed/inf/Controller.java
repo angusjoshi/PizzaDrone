@@ -6,7 +6,10 @@ import uk.ac.ed.inf.order.Order;
 import uk.ac.ed.inf.order.OrderValidator;
 import uk.ac.ed.inf.pathing.CalculationTimer;
 import uk.ac.ed.inf.pathing.PathFinder;
+import uk.ac.ed.inf.restutils.BadTestResponseException;
+import uk.ac.ed.inf.restutils.RestClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,16 +17,25 @@ import java.util.List;
 public class Controller {
     public static int MOVE_CAPACITY = 2000;
 
-    private String apiString;
-    private String currentDayString;
+    private final String apiString;
+    private final String currentDayString;
     public Controller(String apiString, String currentDayString) {
         this.apiString = apiString;
         this.currentDayString = currentDayString;
     }
     public void processDay() {
-        var orderValidator = new OrderValidator(apiString, currentDayString);
+        try {
+            RestClient.initialiseRestClient(apiString);
+        } catch (IOException e) {
+            System.err.println("Error with initialising the rest client! exiting...");
+            System.exit(2);
+        } catch (BadTestResponseException e) {
+            System.err.println("Unexpected test response from rest client! exiting...");
+            System.exit(2);
+        }
+
+        var orderValidator = new OrderValidator(currentDayString);
         var orders = orderValidator.getValidatedOrders();
-        var pathFinder = PathFinder.getInstance();
 
         var ordersToDeliver = chooseOrdersToBeDelivered(orders);
         deliverOrders(ordersToDeliver);
@@ -36,8 +48,7 @@ public class Controller {
 
     }
     public void deliverOrders(List<Order> ordersToDeliver) {
-        ordersToDeliver.stream().forEach(Order::deliver);
-
+        ordersToDeliver.forEach(Order::deliver);
     }
     public List<Order> chooseOrdersToBeDelivered(List<Order> orders) {
         CalculationTimer.startCalculationTimer();

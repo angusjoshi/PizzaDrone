@@ -1,5 +1,7 @@
 package uk.ac.ed.inf;
 
+import uk.ac.ed.inf.areas.LngLat;
+
 /**
  * Final class to contain constants to be used throughout the program
  */

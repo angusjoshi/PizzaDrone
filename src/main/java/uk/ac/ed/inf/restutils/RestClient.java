@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.restutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.LngLat;
 import uk.ac.ed.inf.order.Restaurant;
 import uk.ac.ed.inf.areas.NoFlyZone;
 import uk.ac.ed.inf.order.Order;
@@ -20,7 +20,17 @@ public class RestClient {
     public static final String NO_FLY_ZONES_EXTENSION = "noFlyZones";
     protected String baseURLString;
 
-
+    private static RestClient instance;
+    public static void initialiseRestClient(String baseURLString) throws IOException, BadTestResponseException {
+        instance = new RestClient(baseURLString);
+    }
+    public static RestClient getInstance() {
+        if(instance == null) {
+            System.err.println("Rest client must be initialised before accessing!");
+            System.exit(2);
+        }
+        return instance;
+    }
     /**
      * Initialises the RestClient class. Also makes a call to the test endpoint on the API to ensure
      * all is working correctly.
@@ -28,7 +38,7 @@ public class RestClient {
      * @throws BadTestResponseException If the request to the test endpoint doesn't behave as expected
      * @throws IOException If there is an error with forming the URL, or making the request to the API
      */
-    public RestClient(String baseURLString) throws BadTestResponseException, IOException {
+    private RestClient(String baseURLString) throws BadTestResponseException, IOException {
         String normalisedURLString = baseURLString.endsWith("/") ? baseURLString : baseURLString + "/";
         URL testURL = new URL(normalisedURLString + TEST_EXTENSION);
         TestResponse testResponse = new ObjectMapper().readValue(testURL, TestResponse.class);

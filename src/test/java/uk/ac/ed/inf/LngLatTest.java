@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.areas.LngLat;
 import uk.ac.ed.inf.pathing.CompassDirection;
 
 import static org.junit.Assert.assertTrue;
@@ -149,4 +150,15 @@ public class LngLatTest {
         assertEquals(0.000225, roundedPoint.lng(), 0);
         assertEquals(0.000225, roundedPoint.lat(), 0);
     }
+
+//    @Test
+//    public void testElsieIntersection() {
+//        LngLat outside1 = new LngLat(	-3.1901, 55.9452);
+//        LngLat outside2 = new LngLat(	-3.1899, 55.9451);
+//
+//        LngLat vertex1 = new LngLat(-3.1900262832641597, 55.94507554227258);
+//        LngLat vertex2 = new LngLat(-3.190133571624756, 55.94529783810495);
+//
+//        assertFalse(LngLat.lineSegmentsIntersect(outside1, outside2, vertex1, vertex2));
+//    }
 }

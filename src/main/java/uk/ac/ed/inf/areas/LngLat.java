@@ -1,8 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.areas;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.ac.ed.inf.areas.CentralArea;
 import uk.ac.ed.inf.pathing.CompassDirection;
 
 /**

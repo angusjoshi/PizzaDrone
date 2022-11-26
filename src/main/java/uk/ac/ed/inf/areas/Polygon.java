@@ -1,9 +1,5 @@
 package uk.ac.ed.inf.areas;
 
-import uk.ac.ed.inf.LngLat;
-
-import java.util.HashMap;
-
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -15,8 +11,7 @@ import static java.lang.Math.min;
 public class Polygon implements IPolygon {
     private IPolygon boundingRectangle;
     private LngLat outsidePolygon;
-    private LngLat[] vertices;
-    private HashMap<LngLat, Boolean> checkedPoints;
+    private final LngLat[] vertices;
 
     /**
      * Constructs a polygon from a 2d array of doubles. Each coordinate is taken to be an array with size 2
@@ -30,8 +25,6 @@ public class Polygon implements IPolygon {
         }
 
         processVertices();
-
-        this.checkedPoints = new HashMap<>();
     }
 
     /**
@@ -40,10 +33,7 @@ public class Polygon implements IPolygon {
      */
     public Polygon(LngLat[] vertices) {
         this.vertices = vertices;
-
         processVertices();
-
-        this.checkedPoints = new HashMap<>();
     }
 
     private void processVertices() {
@@ -77,35 +67,23 @@ public class Polygon implements IPolygon {
      */
     @Override
     public boolean isPointInside(LngLat point) {
-        return boundingRectangle.isPointInside(point);
-        /*if(!boundingRectangle.isPointInside(point)) {
+        if(!boundingRectangle.isPointInside(point)) {
             return false;
-        }
-        LngLat roundedPoint = point.roundToNearestStep();
-
-        if(checkedPoints.containsKey(roundedPoint)) {
-            return checkedPoints.get(roundedPoint);
         }
 
         //draw a line from the point to a point we know is outside the polygon
         //count the number of intersections of this line with edges of the polygon.
         int edgeIntersections = 0;
-        for(int i = 0; i < vertices.length; i++) {
+        for(int i = 0; i < vertices.length - 1; i++) {
             var vertexOne = vertices[i];
-            var vertexTwo = vertices[(i + 1) % vertices.length];
-            if(LngLat.lineSegmentsIntersect(outsidePolygon, roundedPoint,  vertexOne, vertexTwo)) {
+            var vertexTwo = vertices[i + 1];
+            if(LngLat.lineSegmentsIntersect(outsidePolygon, point,  vertexOne, vertexTwo)) {
                 edgeIntersections++;
             }
         }
 
         //odd number of intersections iff point is inside this polygon.
-        boolean pointIsInside = edgeIntersections % 2 == 1;
-
-        checkedPoints.put(roundedPoint, pointIsInside);
-        return pointIsInside;*/
-        //TODO: revisit polygon inclusion checking.
-        //could be that bounded rectangle is best, or maybe even check for line intersections
-        //between line seg formed by move and the edges (this would require significant redesign)
+        return edgeIntersections % 2 == 1;
     }
 
 

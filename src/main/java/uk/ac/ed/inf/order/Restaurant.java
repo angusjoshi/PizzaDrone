@@ -1,8 +1,7 @@
 package uk.ac.ed.inf.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.ac.ed.inf.LngLat;
-import uk.ac.ed.inf.order.Menu;
+import uk.ac.ed.inf.areas.LngLat;
 
 import java.util.Arrays;
 import java.util.Optional;

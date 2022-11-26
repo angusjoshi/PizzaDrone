@@ -1,11 +1,12 @@
 package uk.ac.ed.inf.pathing;
 
-import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.LngLat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static uk.ac.ed.inf.LngLat.STEP_LENGTH;
+import static uk.ac.ed.inf.areas.LngLat.STEP_LENGTH;
 
 /**
  * Class to be used in conjunction with PathFinder. Each SearchNode instance represents a node in the
@@ -13,12 +14,12 @@ import static uk.ac.ed.inf.LngLat.STEP_LENGTH;
  */
 public class SearchNode implements Comparable<SearchNode> {
     private final CompassDirection prevDirection;
-    private double searchWeight;
-    private LngLat location;
-    private double pathLength;
-    private int nSteps;
-    private SearchNode prevNode;
-    private String orderNo;
+    private final double searchWeight;
+    private final LngLat location;
+    private final double pathLength;
+    private final int nSteps;
+    private final SearchNode prevNode;
+    private final String orderNo;
 
     /**
      * Basic constructor for SearchNode
@@ -101,33 +102,23 @@ public class SearchNode implements Comparable<SearchNode> {
     }
 
     /**
-     * Gets the previous node in the path to this node in the search
-     * @return reference to the previous node
-     */
-    public SearchNode getPrevNode() {
-        return prevNode;
-    }
-
-    /**
      * Convert the linked-list style search node list into an array of Move type. Reverses the list
      * to the correct direction in the process.
      * @return Array of moves in the correct order
      */
-    public List<Move> toMoveArray() {
-        //TODO: this needs refactored to work with lists rather an arrays.
+    public List<Move> toMoveList() {
         Move[] moves = new Move[nSteps];
-        int counter = nSteps;
         SearchNode currentNode = this;
-        SearchNode prevNode = this.prevNode;
-        while(nSteps > 0) {
-            prevNode = currentNode.prevNode;
+        int counter = nSteps;
+        while(counter > 0) {
+            var prevNode = currentNode.prevNode;
             Move move = new Move(currentNode.getOrderNo(), prevNode.getLocation(), currentNode.location,
                     currentNode.getPrevDirection(), CalculationTimer.getTicksSinceCalculationStarted());
-            moves[nSteps - 1] = move;
-            nSteps--;
+            moves[counter - 1] = move;
+            counter--;
             currentNode = prevNode;
         }
-        return Arrays.asList(moves);
+        return new ArrayList<>(Arrays.asList(moves));
     }
 
     private String getOrderNo() {

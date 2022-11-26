@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.pathing;
 
-import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.LngLat;
 
 /**
  * enumeration for the directions on a 16 point compass
@@ -50,25 +50,25 @@ public enum CompassDirection {
     }
 
     public CompassDirection getOppositeDirection() {
-        switch(this) {
-            case N: return S;
-            case NNE: return SSW;
-            case NE: return SW;
-            case ENE: return WSW;
-            case E: return W;
-            case ESE: return WNW;
-            case SE: return NW;
-            case SSE: return NNW;
-            case S: return N;
-            case SSW: return NNE;
-            case SW: return NE;
-            case WSW: return ENE;
-            case W: return E;
-            case WNW: return ESE;
-            case NW: return SE;
-            case NNW: return SSE;
-            default: return null;
-        }
+        return switch (this) {
+            case N -> S;
+            case NNE -> SSW;
+            case NE -> SW;
+            case ENE -> WSW;
+            case E -> W;
+            case ESE -> WNW;
+            case SE -> NW;
+            case SSE -> NNW;
+            case S -> N;
+            case SSW -> NNE;
+            case SW -> NE;
+            case WSW -> ENE;
+            case W -> E;
+            case WNW -> ESE;
+            case NW -> SE;
+            case NNW -> SSE;
+            default -> null;
+        };
     }
 
     public double getAngleAsDegrees() {

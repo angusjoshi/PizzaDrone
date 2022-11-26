@@ -1,11 +1,10 @@
 package uk.ac.ed.inf.areas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.ac.ed.inf.LngLat;
 
 public class NoFlyZone extends Polygon {
 
-    private String name;
+    private final String name;
 
     public NoFlyZone(@JsonProperty("name") String name, @JsonProperty("coordinates") double[][] coordindates) {
         super(coordindates);

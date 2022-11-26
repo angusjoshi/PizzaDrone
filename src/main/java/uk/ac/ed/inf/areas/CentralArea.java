@@ -1,11 +1,7 @@
 package uk.ac.ed.inf.areas;
 
-import uk.ac.ed.inf.restutils.BadTestResponseException;
-import uk.ac.ed.inf.Constants;
-import uk.ac.ed.inf.LngLat;
 import uk.ac.ed.inf.restutils.RestClient;
 
-import java.io.IOException;
 
 /**
  * Singleton class for retrieving and storing the central area polygon
@@ -16,9 +12,8 @@ public class CentralArea extends Polygon {
     private CentralArea(LngLat[] vertices) {
         super(vertices);
     }
-    private static CentralArea centralAreaFactory() throws IOException, BadTestResponseException {
-        //TODO: this needs to be reorganised. The API string should be coming from main
-        RestClient restClient = new RestClient(Constants.API_BASE);
+    private static CentralArea centralAreaFactory() {
+        RestClient restClient = RestClient.getInstance();
 
         LngLat[] vertices = restClient.getCentralAreaVerticesFromRestServer();
         return new CentralArea(vertices);
@@ -32,12 +27,7 @@ public class CentralArea extends Polygon {
      */
     public static CentralArea getInstance() {
         if(instance == null) {
-            //TODO: improve error handling here
-            try{
-                instance = centralAreaFactory();
-            } catch(IOException | BadTestResponseException e) {
-                e.printStackTrace();
-            }
+            instance = centralAreaFactory();
         }
         return instance;
     }
