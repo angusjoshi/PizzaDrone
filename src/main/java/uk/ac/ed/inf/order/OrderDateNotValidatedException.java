@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.order;
 
 public class OrderDateNotValidatedException extends Throwable {
     private final String message;

@@ -1,36 +1,37 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.jsonutils;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.ed.inf.pathing.Move;
+import uk.ac.ed.inf.order.Order;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 public class GeojsonWriter {
-    public static void makeGeoJsonForTesting(SearchNode finalNode) {
-        double[][] coordinates = new double[finalNode.getNSteps() + 1][];
-        SearchNode currentNode = finalNode;
-        int stepN = finalNode.getNSteps();
-        while(stepN >= 0) {
-            double[] lngLatAsCoordinates = currentNode.getLocation().toCoordinates();
-            coordinates[stepN] = lngLatAsCoordinates;
-            currentNode = currentNode.getPrevNode();
-            stepN--;
-        }
+    public static void writeDeliveryPathToGeojson(List<Order> ordersToDeliver, String currentDayString) {
+        List<Move> flightPath = Move.getFlightPath(ordersToDeliver);
+        var coordinates =  flightPath.stream()
+                .map(Move::fromAsCoordinates).toArray();
+
         LineString lineString = new LineString(coordinates);
         Feature feature = new Feature(lineString);
         Feature[] features = new Feature[1];
         features[0] = feature;
         FeatureCollection featureCollection = new FeatureCollection(features);
         ObjectMapper objectMapper = new ObjectMapper();
+        String fileName = "drone-" + currentDayString + ".json";
         try {
-            objectMapper.writeValue(Paths.get("hehe.geojson").toFile(), featureCollection);
+            objectMapper.writeValue(Paths.get(fileName).toFile(), featureCollection);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 }
+
 class FeatureCollection {
     String type;
     private Feature[] features;
@@ -58,7 +59,7 @@ class Feature {
     public Feature(LineString geometry) {
         this.type = "Feature";
         this.geometry = geometry;
-        this.properties = null;
+        this.properties = new Properties();
     }
     public String getType() {
         return this.type;
@@ -68,17 +69,21 @@ class Feature {
     }
 }
 class LineString {
-    private double[][] coordinates;
+    private Object[] coordinates;
     private String type;
-    public LineString(double[][] coordinates) {
+    public LineString(Object[] coordinates) {
         this.coordinates = coordinates;
         this.type = "LineString";
     }
 
-    public double[][] getCoordinates() {
+    public Object[] getCoordinates() {
         return this.coordinates;
     }
     public String getType() {
         return this.type;
     }
+}
+@JsonSerialize
+class Properties {
+    public Properties(){}
 }

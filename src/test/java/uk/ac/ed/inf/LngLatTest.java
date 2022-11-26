@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.pathing.CompassDirection;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;

@@ -1,4 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.areas;
+
+import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.areas.IPolygon;
 
 /**
  * Class to represent a rectangle in the LngLat space. The rectangle can only be oriented

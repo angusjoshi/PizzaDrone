@@ -1,4 +1,6 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.pathing;
+
+import uk.ac.ed.inf.LngLat;
 
 /**
  * enumeration for the directions on a 16 point compass
@@ -35,7 +37,7 @@ public enum CompassDirection {
         double y = Math.sin(theta);
 
         this.unitStep = new LngLat(x, y);
-        this.theta = theta;
+        this.theta = 22.5 * nSixteenths;
     }
 
     /**
@@ -67,5 +69,15 @@ public enum CompassDirection {
             case NNW: return SSE;
             default: return null;
         }
+    }
+
+    public double getAngleAsDegrees() {
+        return theta;
+    }
+    public static Double getAngleAsDegrees(CompassDirection direction) {
+        if(direction == null) {
+            return null;
+        }
+        return direction.getAngleAsDegrees();
     }
 }

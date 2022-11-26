@@ -1,5 +1,12 @@
 package uk.ac.ed.inf;
 
+import uk.ac.ed.inf.jsonutils.GeojsonWriter;
+import uk.ac.ed.inf.jsonutils.JSONWriter;
+import uk.ac.ed.inf.order.Order;
+import uk.ac.ed.inf.order.OrderValidator;
+import uk.ac.ed.inf.pathing.CalculationTimer;
+import uk.ac.ed.inf.pathing.PathFinder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,20 +14,33 @@ import java.util.List;
 public class Controller {
     public static int MOVE_CAPACITY = 2000;
 
-
+    private String apiString;
+    private String currentDayString;
     public Controller(String apiString, String currentDayString) {
-        OrderValidator orderValidator = new OrderValidator(apiString, currentDayString);
-        List<Order> orders = orderValidator.getValidatedOrders();
-        PathFinder pathFinder = PathFinder.getInstance();
-        int sum = 0;
-        var path = pathFinder.findPathToRestaurant(orders.get(0).getFulfillingRestaurant());
-        var reversed = Move.reverseMoveList(path);
-        var orders2 = chooseOrdersToBeDelivered(orders);
-        var x = orders2.get(0).getDeliveryPath();
+        this.apiString = apiString;
+        this.currentDayString = currentDayString;
+    }
+    public void processDay() {
+        var orderValidator = new OrderValidator(apiString, currentDayString);
+        var orders = orderValidator.getValidatedOrders();
+        var pathFinder = PathFinder.getInstance();
 
-        System.out.println("asdfasd");
+        var ordersToDeliver = chooseOrdersToBeDelivered(orders);
+        deliverOrders(ordersToDeliver);
+
+        JSONWriter.writeOrdersToJson(orders, currentDayString);
+
+        JSONWriter.writeDeliveryPathToJson(ordersToDeliver, currentDayString);
+
+        GeojsonWriter.writeDeliveryPathToGeojson(ordersToDeliver, currentDayString);
+
+    }
+    public void deliverOrders(List<Order> ordersToDeliver) {
+        ordersToDeliver.stream().forEach(Order::deliver);
+
     }
     public List<Order> chooseOrdersToBeDelivered(List<Order> orders) {
+        CalculationTimer.startCalculationTimer();
         List<Order> ordersToDeliver = new ArrayList<>();
         for(var order : orders) {
             if(order.shouldBeDelivered()) {

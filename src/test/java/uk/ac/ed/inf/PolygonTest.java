@@ -1,6 +1,8 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.areas.IPolygon;
+import uk.ac.ed.inf.areas.Polygon;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

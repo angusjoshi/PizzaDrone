@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.areas.CentralArea;
 
 import static org.junit.Assert.assertNotNull;
 

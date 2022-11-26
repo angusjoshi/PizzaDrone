@@ -1,4 +1,9 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.areas;
+
+import uk.ac.ed.inf.restutils.BadTestResponseException;
+import uk.ac.ed.inf.Constants;
+import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.restutils.RestClient;
 
 import java.io.IOException;
 
@@ -12,6 +17,7 @@ public class CentralArea extends Polygon {
         super(vertices);
     }
     private static CentralArea centralAreaFactory() throws IOException, BadTestResponseException {
+        //TODO: this needs to be reorganised. The API string should be coming from main
         RestClient restClient = new RestClient(Constants.API_BASE);
 
         LngLat[] vertices = restClient.getCentralAreaVerticesFromRestServer();

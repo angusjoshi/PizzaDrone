@@ -1,4 +1,6 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.pathing;
+
+import uk.ac.ed.inf.LngLat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +18,7 @@ public class SearchNode implements Comparable<SearchNode> {
     private double pathLength;
     private int nSteps;
     private SearchNode prevNode;
+    private String orderNo;
 
     /**
      * Basic constructor for SearchNode
@@ -27,13 +30,14 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param nSteps number of steps in the path from the source to this node
      */
     public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
-                      CompassDirection prevDirection, int nSteps) {
+                      CompassDirection prevDirection, int nSteps, String orderNo) {
         this.location = location;
         this.pathLength = pathLength;
         this.prevNode = prevNode;
         this.searchWeight = searchWeight;
         this.prevDirection = prevDirection;
         this.nSteps = nSteps;
+        this.orderNo = orderNo;
     }
 
 
@@ -51,7 +55,7 @@ public class SearchNode implements Comparable<SearchNode> {
             double nextSearchWeight = pathLength + 1 + nextLocation.distanceTo(destination);
 
             SearchNode node = new SearchNode(nextLocation, pathLength + STEP_LENGTH,
-                    nextSearchWeight, this, directions[i], this.nSteps + 1);
+                    nextSearchWeight, this, directions[i], this.nSteps + 1, orderNo);
 
             nodes[i] = node;
         }
@@ -110,18 +114,24 @@ public class SearchNode implements Comparable<SearchNode> {
      * @return Array of moves in the correct order
      */
     public List<Move> toMoveArray() {
+        //TODO: this needs refactored to work with lists rather an arrays.
         Move[] moves = new Move[nSteps];
         int counter = nSteps;
         SearchNode currentNode = this;
         SearchNode prevNode = this.prevNode;
         while(nSteps > 0) {
             prevNode = currentNode.prevNode;
-            Move move = new Move(prevNode.getLocation(), this.location, currentNode.getPrevDirection());
+            Move move = new Move(currentNode.getOrderNo(), prevNode.getLocation(), currentNode.location,
+                    currentNode.getPrevDirection(), CalculationTimer.getTicksSinceCalculationStarted());
             moves[nSteps - 1] = move;
             nSteps--;
             currentNode = prevNode;
         }
         return Arrays.asList(moves);
+    }
+
+    private String getOrderNo() {
+        return orderNo;
     }
 
     private CompassDirection getPrevDirection() {

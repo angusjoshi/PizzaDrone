@@ -1,6 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.areas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.ac.ed.inf.LngLat;
 
 public class NoFlyZone extends Polygon {
 

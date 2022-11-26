@@ -1,4 +1,9 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.pathing;
+
+import uk.ac.ed.inf.LngLat;
+import uk.ac.ed.inf.order.Restaurant;
+import uk.ac.ed.inf.areas.CentralArea;
+import uk.ac.ed.inf.areas.NoFlyZones;
 
 import java.util.*;
 
@@ -33,22 +38,22 @@ public class PathFinder {
      * @param restaurant
      * @return
      */
-    public List<Move> findPathToRestaurant(Restaurant restaurant) {
+    public List<Move> findPathToRestaurant(Restaurant restaurant, String orderNo) {
         if(pathsAlreadyComputed.containsKey(restaurant)) {
             return pathsAlreadyComputed.get(restaurant);
         }
 
-        var path = findPath(APPLETON_TOWER, restaurant.getLngLat());
+        var path = findPath(APPLETON_TOWER, restaurant.getLngLat(), orderNo);
         pathsAlreadyComputed.put(restaurant, path);
         return path;
     }
-    protected List<Move> findPath(LngLat source, LngLat destination) {
+    protected List<Move> findPath(LngLat source, LngLat destination, String orderNo) {
         seenBefore.clear();
         CentralArea centralArea = CentralArea.getInstance();
         NoFlyZones noFlyZones = NoFlyZones.getInstance();
 
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
-        nodes.add(new SearchNode(source, 0, 0, null, null, 0));
+        nodes.add(new SearchNode(source, 0, 0, null, null, 0, orderNo));
 
         SearchNode finalSearchNode = null;
 

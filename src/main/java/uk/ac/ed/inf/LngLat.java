@@ -2,6 +2,8 @@ package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.ac.ed.inf.areas.CentralArea;
+import uk.ac.ed.inf.pathing.CompassDirection;
 
 /**
  * Record for storing longitude and latitude of a single point,

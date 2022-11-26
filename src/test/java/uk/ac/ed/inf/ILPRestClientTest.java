@@ -1,6 +1,10 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.order.Order;
+import uk.ac.ed.inf.order.Restaurant;
+import uk.ac.ed.inf.restutils.BadTestResponseException;
+import uk.ac.ed.inf.restutils.RestClient;
 
 import java.io.IOException;
 

@@ -1,4 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.order;
+
+import uk.ac.ed.inf.restutils.BadTestResponseException;
+import uk.ac.ed.inf.restutils.RestClient;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,23 +28,27 @@ public class OrderValidator {
         this.restaurants = null;
     }
     public List<Order> getValidatedOrders() {
-        retrieveDataFromRestServer();
+        try{
+            retrieveDataFromRestServer();
+        } catch(DayNotValidException | BadTestResponseException | IOException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
         validateOrders();
         return new ArrayList<>(Arrays.asList(orders));
     }
-    public void retrieveDataFromRestServer() {
+    public void retrieveDataFromRestServer() throws DayNotValidException, BadTestResponseException, IOException {
         if(currentDay == null) {
-            //TODO: improve error handling here.
-            throw new RuntimeException();
+            throw new DayNotValidException();
         }
         RestClient restClient;
         try {
             restClient = new RestClient(apiString);
         } catch (BadTestResponseException e) {
-            //TODO: improve error handling here.
-            throw new RuntimeException(e);
+            throw new BadTestResponseException();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException();
         }
 
         orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
@@ -105,14 +112,18 @@ public class OrderValidator {
 
     private int getDeliveryCost(Order order) throws InvalidPizzaCombinationException {
         String[] pizzas = order.getOrderItems();
-        if(pizzas.length == 0) return 0;
+        if(pizzas.length == 0) {
+            return 0;
+        }
         int deliveryCost = 0;
         //attempt to find the first pizza in the menus of all restaurants
         var foundRestaurant = Arrays.stream(restaurants)
                 .filter(currRestaurant -> currRestaurant.menuContainsPizza(pizzas[0]))
                 .findAny();
 
-        if(foundRestaurant.isEmpty()) throw new InvalidPizzaCombinationException();
+        if(foundRestaurant.isEmpty()) {
+            throw new InvalidPizzaCombinationException();
+        }
 
         //search can be restricted to a single restaurant if we find the first one
         var restaurant = foundRestaurant.get();

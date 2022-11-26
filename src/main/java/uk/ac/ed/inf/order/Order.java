@@ -1,7 +1,9 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.GenericValidator;
+import uk.ac.ed.inf.pathing.Move;
+import uk.ac.ed.inf.pathing.PathFinder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,19 +51,19 @@ public class Order implements Comparable<Order> {
         deliveryPath.addAll(computedPath);
 
         Move lastMove = deliveryPath.get(deliveryPath.size() - 1);
-        deliveryPath.add(Move.hover(lastMove.to()));
+        deliveryPath.add(Move.hover(lastMove.orderNo(), lastMove.to()));
 
         List<Move> reversedPath = Move.reverseMoveList(computedPath);
         deliveryPath.addAll(reversedPath);
 
         lastMove = deliveryPath.get(deliveryPath.size() - 1);
-        deliveryPath.add(Move.hover(lastMove.to()));
+        deliveryPath.add(Move.hover(lastMove.orderNo(), lastMove.to()));
 
         return deliveryPath;
     }
     public int pathLength() {
         if(computedPath == null) {
-            //TODO: improve error handling here
+            System.err.println("Error: attempt to get path length before path computation!");
             return -1;
         }
         return computedPath.size();
@@ -77,7 +79,7 @@ public class Order implements Comparable<Order> {
         if(!this.shouldBeDelivered()) {
             return;
         }
-        this.computedPath = PathFinder.getInstance().findPathToRestaurant(fulfillingRestaurant);
+        this.computedPath = PathFinder.getInstance().findPathToRestaurant(fulfillingRestaurant, orderNo);
     }
     private double movesPerPizza() {
         return ((double) computedPath.size()) / orderItems.length;
@@ -150,5 +152,12 @@ public class Order implements Comparable<Order> {
     }
     public Restaurant getFulfillingRestaurant() {
         return fulfillingRestaurant;
+    }
+    public String getOrderNo() {
+        return this.orderNo;
+    }
+
+    public void deliver() {
+        setOrderOutcome(OrderOutcome.Delivered);
     }
 }

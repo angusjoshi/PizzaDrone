@@ -1,6 +1,9 @@
 package uk.ac.ed.inf;
 
 import org.junit.Test;
+import uk.ac.ed.inf.pathing.PathFinder;
+import uk.ac.ed.inf.restutils.BadTestResponseException;
+import uk.ac.ed.inf.restutils.RestClient;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,7 +26,7 @@ public class PathFinderTest {
         }
 
         var restaurants = restClient.getRestaurantsFromRestServer();
-        var paths = Arrays.stream(restaurants).map(restaurant -> pathFinder.findPathToRestaurant(restaurant)).collect(Collectors.toList());
+        var paths = Arrays.stream(restaurants).map(restaurant -> pathFinder.findPathToRestaurant(restaurant, "hehe")).collect(Collectors.toList());
 
         System.out.println("asdkljf;asldf");
     }
