@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.GenericValidator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * class to store a pizza order
  */
-public class Order {
+public class Order implements Comparable<Order> {
     private String orderNo;
     private String customer;
     private String creditCardNumber;
@@ -20,7 +22,9 @@ public class Order {
     private LocalDate creditCardExpiry;
 
     private OrderOutcome orderOutcome;
+    private Restaurant fulfillingRestaurant;
 
+    private List<Move> computedPath;
     public Order(@JsonProperty("orderNo") String orderNo, @JsonProperty("orderDate") String orderDateString,
                  @JsonProperty("customer") String customer,@JsonProperty("creditCardNumber") String creditCardNumber,
                  @JsonProperty("creditCardExpiry") String cardExpiryString, @JsonProperty("cvv") String cvv,
@@ -36,10 +40,51 @@ public class Order {
 
         this.orderDate = DateParser.parseDateString(orderDateString);
         this.creditCardExpiry = DateParser.parseCreditCardExpiry(cardExpiryString);
+        this.computedPath = null;
     }
 
 
+    public List<Move> getDeliveryPath() {
+        List<Move> deliveryPath = new ArrayList<>();
+        deliveryPath.addAll(computedPath);
 
+        Move lastMove = deliveryPath.get(deliveryPath.size() - 1);
+        deliveryPath.add(Move.hover(lastMove.to()));
+
+        List<Move> reversedPath = Move.reverseMoveList(computedPath);
+        deliveryPath.addAll(reversedPath);
+
+        lastMove = deliveryPath.get(deliveryPath.size() - 1);
+        deliveryPath.add(Move.hover(lastMove.to()));
+
+        return deliveryPath;
+    }
+    public int pathLength() {
+        if(computedPath == null) {
+            //TODO: improve error handling here
+            return -1;
+        }
+        return computedPath.size();
+    }
+    @Override
+    public int compareTo(Order other) {
+        return (int) Math.signum(this.movesPerPizza() - other.movesPerPizza());
+    }
+    public void computePath() {
+        if(fulfillingRestaurant == null) {
+            return;
+        }
+        if(!this.shouldBeDelivered()) {
+            return;
+        }
+        this.computedPath = PathFinder.getInstance().findPathToRestaurant(fulfillingRestaurant);
+    }
+    private double movesPerPizza() {
+        return ((double) computedPath.size()) / orderItems.length;
+    }
+    public boolean shouldBeDelivered() {
+        return orderOutcome == OrderOutcome.ValidButNotDelivered;
+    }
     public void validateOrderDate(LocalDate currentDay) {
         if(orderDate == null) {
             return;
@@ -99,5 +144,11 @@ public class Order {
     }
     public String[] getOrderItems() {
         return orderItems;
+    }
+    public void setFulfillingRestaurant(Restaurant restaurant) {
+        fulfillingRestaurant = restaurant;
+    }
+    public Restaurant getFulfillingRestaurant() {
+        return fulfillingRestaurant;
     }
 }

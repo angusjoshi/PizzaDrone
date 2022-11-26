@@ -1,26 +1,49 @@
 package uk.ac.ed.inf;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.*;
 
+/**
+ * Class to find a path between appleton tower and a given restaurant.
+ */
 public class PathFinder {
+    /**
+     * The location of appleton tower, defined in the spec.
+     */
     public static final LngLat APPLETON_TOWER = new LngLat(-3.186874, 55.944494);
+    private static PathFinder instance;
     private HashSet<LngLat> seenBefore;
-    private HashMap<Restaurant, Move[]> pathsAlreadyComputed;
-    public PathFinder() {
+    private HashMap<Restaurant, List<Move>> pathsAlreadyComputed;
+
+    /**
+     * Basic initialiser for the pathfinder
+     */
+    public static PathFinder getInstance() {
+        if(instance == null) {
+            instance = new PathFinder();
+        }
+        return instance;
+    }
+    private PathFinder() {
         seenBefore = new HashSet<>();
         pathsAlreadyComputed = new HashMap<>();
     }
-    public Move[] findPathToRestaurant(Restaurant restaurant) {
+
+    /**
+     * Finds a path from appleton tower to a given restaurant.
+     * @param restaurant
+     * @return
+     */
+    public List<Move> findPathToRestaurant(Restaurant restaurant) {
         if(pathsAlreadyComputed.containsKey(restaurant)) {
             return pathsAlreadyComputed.get(restaurant);
         }
-        return findPath(APPLETON_TOWER, restaurant.getLngLat());
+
+        var path = findPath(APPLETON_TOWER, restaurant.getLngLat());
+        pathsAlreadyComputed.put(restaurant, path);
+        return path;
     }
-    public Move[] findPath(LngLat source, LngLat destination) {
-        //search for each compass direction
+    protected List<Move> findPath(LngLat source, LngLat destination) {
+        seenBefore.clear();
         CentralArea centralArea = CentralArea.getInstance();
         NoFlyZones noFlyZones = NoFlyZones.getInstance();
 

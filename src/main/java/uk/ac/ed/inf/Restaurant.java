@@ -54,6 +54,10 @@ public class Restaurant {
                 .findAny();
     }
 
+    /**
+     * Get the location of the restaurant.
+     * @return the location of the restaurant in LngLat form
+     */
     public LngLat getLngLat() {
         return this.lngLat;
     }

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Class to make requests to the rest server and deserialise into useful forms.
+ */
 public class RestClient {
     public static final String RESTAURANTS_EXTENSION = "restaurants";
     public static final String ORDERS_EXTENSION = "orders";
@@ -14,6 +17,13 @@ public class RestClient {
     protected String baseURLString;
 
 
+    /**
+     * Initialises the RestClient class. Also makes a call to the test endpoint on the API to ensure
+     * all is working correctly.
+     * @param baseURLString The base URL string for the API (e.g. "https://ilp-rest.azurewebsites.net")
+     * @throws BadTestResponseException If the request to the test endpoint doesn't behave as expected
+     * @throws IOException If there is an error with forming the URL, or making the request to the API
+     */
     public RestClient(String baseURLString) throws BadTestResponseException, IOException {
         String normalisedURLString = baseURLString.endsWith("/") ? baseURLString : baseURLString + "/";
         URL testURL = new URL(normalisedURLString + TEST_EXTENSION);
@@ -23,6 +33,12 @@ public class RestClient {
         }
         this.baseURLString = normalisedURLString;
     }
+
+    /**
+     * Get the orders from the rest server on a specific date. Returns an empty array if there is an error.
+     * @param date the date to get orders for in string form. MUST be in format "yyyy-MM-dd"
+     * @return Array of orders, with one element for each of the orders on the required day.
+     */
     public Order[] getOrdersFromRestServerOnDate(String date) {
         Order[] orders;
         try{
@@ -36,6 +52,11 @@ public class RestClient {
         }
         return orders;
     }
+
+    /**
+     * Get the orders from the rest server for all dates.
+     * @return An array of Order type, with one element for each order.
+     */
     public Order[] getOrdersFromRestServer() {
         Order[] orders;
         try{
@@ -47,6 +68,11 @@ public class RestClient {
         }
         return orders;
     }
+
+    /**
+     * Get the restaurant data from the rest server.
+     * @return An array of Restaurant type, with one element for each restaurant.
+     */
     public Restaurant[] getRestaurantsFromRestServer() {
         Restaurant[] restaurants;
         try{
@@ -58,6 +84,11 @@ public class RestClient {
         }
         return restaurants;
     }
+
+    /**
+     * Get the vertices of the centralArea from the rest sever. the vertices are returned in anticlockwise order,
+     * @return an array of LngLat with one LngLat for each vertex, in anticlockwise order.
+     */
     public LngLat[] getCentralAreaVerticesFromRestServer() {
         LngLat[] vertices = null;
         try {
@@ -68,6 +99,12 @@ public class RestClient {
         }
         return vertices;
     }
+
+    /**
+     * Get an array of NoFlyZone from the rest server. Each element in the array is a no fly zone for
+     * use in the pathfinding computation.
+     * @return An array of NoFlyZones each representing a single NoFlyZone polygon
+     */
     public NoFlyZone[] getNoFlyZonesFromRestServer() {
         NoFlyZone[] noFlyZones = null;
         try {

@@ -46,4 +46,26 @@ public enum CompassDirection {
     public LngLat getOffset(double stepLength) {
         return unitStep.scale(stepLength);
     }
+
+    public CompassDirection getOppositeDirection() {
+        switch(this) {
+            case N: return S;
+            case NNE: return SSW;
+            case NE: return SW;
+            case ENE: return WSW;
+            case E: return W;
+            case ESE: return WNW;
+            case SE: return NW;
+            case SSE: return NNW;
+            case S: return N;
+            case SSW: return NNE;
+            case SW: return NE;
+            case WSW: return ENE;
+            case W: return E;
+            case WNW: return ESE;
+            case NW: return SE;
+            case NNW: return SSE;
+            default: return null;
+        }
+    }
 }

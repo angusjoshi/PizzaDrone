@@ -3,8 +3,20 @@ package uk.ac.ed.inf;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class CompassDirectionTest {
+    @Test
+    public void testOppositeDirection() {
+        assertEquals(CompassDirection.S, CompassDirection.N.getOppositeDirection());
+        assertEquals(CompassDirection.N, CompassDirection.S.getOppositeDirection());
+        assertNotEquals(CompassDirection.S, CompassDirection.S.getOppositeDirection());
+        assertNotEquals(CompassDirection.N, CompassDirection.N.getOppositeDirection());
+    }
+    @Test
+    public void testOppositeDirection2() {
+        assertEquals(CompassDirection.E, CompassDirection.W.getOppositeDirection());
+    }
 
     @Test
     public void testOffset1() {

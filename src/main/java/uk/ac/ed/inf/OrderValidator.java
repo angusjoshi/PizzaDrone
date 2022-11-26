@@ -2,8 +2,10 @@ package uk.ac.ed.inf;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class OrderValidator {
     private static final int ORDER_MAX_PIZZAS = 4;
@@ -12,7 +14,6 @@ public class OrderValidator {
     private String apiString;
     private Restaurant[] restaurants;
     private Order[] orders;
-    private Restaurant fulfillingRestaurant;
     private final HashSet<String> possiblePizzas;
 
 
@@ -23,10 +24,10 @@ public class OrderValidator {
         this.orders = null;
         this.restaurants = null;
     }
-    public Order[] getValidatedOrders() {
+    public List<Order> getValidatedOrders() {
         retrieveDataFromRestServer();
         validateOrders();
-        return orders;
+        return new ArrayList<>(Arrays.asList(orders));
     }
     public void retrieveDataFromRestServer() {
         if(currentDay == null) {
@@ -115,7 +116,7 @@ public class OrderValidator {
 
         //search can be restricted to a single restaurant if we find the first one
         var restaurant = foundRestaurant.get();
-        this.fulfillingRestaurant = restaurant;
+        order.setFulfillingRestaurant(restaurant);
 
         for (String pizza : pizzas) {
             var menuEntry = restaurant.findMenuEntryByName(pizza);

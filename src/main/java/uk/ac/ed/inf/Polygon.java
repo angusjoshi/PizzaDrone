@@ -5,12 +5,22 @@ import java.util.HashMap;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * General implementation of the IPolygon interface. Implements polygons as a collection of vertices,
+ * ordered anticlockwise starting from the top-left. Analogous to how polygons are represented in the rest
+ * server data.
+ */
 public class Polygon implements IPolygon {
     private IPolygon boundingRectangle;
     private LngLat outsidePolygon;
     private LngLat[] vertices;
     private HashMap<LngLat, Boolean> checkedPoints;
 
+    /**
+     * Constructs a polygon from a 2d array of doubles. Each coordinate is taken to be an array with size 2
+     * @param coordinates array of coordinates. Each coordinate satisfies coordinate[0] = long, coordinate[1] = lat.
+     *                    Order is taken to be anticlockwise from the top-left.
+     */
     public Polygon(double[][] coordinates) {
         this.vertices = new LngLat[coordinates.length];
         for(int i = 0; i < coordinates.length; i++) {
@@ -22,6 +32,10 @@ public class Polygon implements IPolygon {
         this.checkedPoints = new HashMap<>();
     }
 
+    /**
+     * Constructs a polygon from an array of LngLat vertices
+     * @param vertices Vertices of the polygon in anticlockwise order
+     */
     public Polygon(LngLat[] vertices) {
         this.vertices = vertices;
 
@@ -54,6 +68,11 @@ public class Polygon implements IPolygon {
         this.outsidePolygon = new LngLat(maxLng + LngLat.STEP_LENGTH, minLat + ((maxLat - minLat) / 2));
     }
 
+    /**
+     * implementation of the IPolygon method to check for inclusion in the polygon
+     * @param point point to be checked for inclusion in the polygon
+     * @return true if point is inside the polygon, false otherwise.
+     */
     @Override
     public boolean isPointInside(LngLat point) {
         return boundingRectangle.isPointInside(point);
