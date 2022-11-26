@@ -11,7 +11,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 
+/**
+ * Class with utilities for writing flightpaths to a geojson
+ */
 public class GeojsonWriter {
+    //To hide the default constructor
+    private GeojsonWriter(){}
+
     /**
      * Writes a list of orders to a geojson in the working directory in the required format.
      * The filename will be in the form "drone-YYYY_MM_dd.geojson"

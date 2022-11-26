@@ -10,6 +10,8 @@ import java.time.temporal.ChronoField;
  * Class with some static methods for parsing date strings into LocalDate types
  */
 public class DateParser {
+    //To hide the default constructor
+    private DateParser(){}
 
     /**
      * Parses a string in the form "yyyy-MM-dd" to a LocalDate type

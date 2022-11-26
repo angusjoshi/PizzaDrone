@@ -29,6 +29,7 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param prevNode previous node in the search for this path
      * @param prevDirection direction taken from the prevNode to reach this one
      * @param nSteps number of steps in the path from the source to this node
+     * @param orderNo The order number as a string
      */
     public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
                       CompassDirection prevDirection, int nSteps, String orderNo) {
@@ -69,7 +70,7 @@ public class SearchNode implements Comparable<SearchNode> {
      * order is computed as a sum of the path length to the node plus a computed heuristic path distance to the
      * destination. At the moment, the heuristic is just euclidean distance.
      * @param other the object to be compared.
-     * @return  -1 if this < other, 0 if this == other, 1 if this > other
+     * @return  -1 if this less than other, 0 if this == other, 1 if this greater than other
      */
     @Override
     public int compareTo(SearchNode other) {

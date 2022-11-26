@@ -14,6 +14,9 @@ import java.util.List;
  * Class with static methods for formatting and writing orders and delivery paths to jsons as required.
  */
 public class JSONWriter {
+    //to hide the default constructor
+    private JSONWriter(){}
+
     /**
      * Writes a list of orders to a json in the working directory, with order outcomes.
      * Filename will be of the format "deliveries-YYYY-MM_dd.geojson"

@@ -21,6 +21,7 @@ public class PathFinder {
 
     /**
      * Lazily initialises the pathfinder, and returns the instance
+     * @return the pathfinder instance
      */
     public static PathFinder getInstance() {
         if(instance == null) {
