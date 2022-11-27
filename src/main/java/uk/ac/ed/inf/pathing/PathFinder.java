@@ -55,8 +55,10 @@ public class PathFinder {
         CentralArea centralArea = CentralArea.getInstance();
         NoFlyZones noFlyZones = NoFlyZones.getInstance();
 
+        //priority is determined by length of path + distance to destination
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
-        nodes.add(new SearchNode(source, 0, 0, null, null, 0, orderNo));
+        nodes.add(new SearchNode(source, 0, 0, null, null, 0, orderNo,
+                centralArea.isPointInside(source)));
 
         while(true) {
             SearchNode currentNode = nodes.remove();
@@ -67,8 +69,10 @@ public class PathFinder {
             if(currentNode.getLocation().closeTo(destination)) {
                 return currentNode.toMoveList();
             }
-            SearchNode[] potentialNextNodes = currentNode.getNextPotentialNodes(destination);
-            Arrays.sort(potentialNextNodes);
+
+            var potentialNextNodes = currentNode.getNextPotentialNodes(destination);
+            Collections.sort(potentialNextNodes);
+
             for(var potentialNextNode : potentialNextNodes) {
                 var roundedLocation = potentialNextNode.getLocation().roundToNearestStep();
 
@@ -76,7 +80,7 @@ public class PathFinder {
                 if(seenBefore.contains(roundedLocation)) {
                     continue;
                 }
-                if(!centralArea.isPointInside(location) || !noFlyZones.pointIsInNoFlyZone(location)) {
+                if(!noFlyZones.pointIsInNoFlyZone(location)) {
                     nodes.add(potentialNextNode);
                     seenBefore.add(roundedLocation);
                 }

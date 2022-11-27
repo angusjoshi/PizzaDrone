@@ -238,4 +238,8 @@ public class Order implements Comparable<Order> {
     public void deliver() {
         setOrderOutcome(OrderOutcome.Delivered);
     }
+
+    public boolean pathFound() {
+        return computedPath != null;
+    }
 }

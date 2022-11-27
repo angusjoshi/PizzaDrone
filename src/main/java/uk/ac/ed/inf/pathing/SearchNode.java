@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.pathing;
 
+import uk.ac.ed.inf.areas.CentralArea;
 import uk.ac.ed.inf.areas.LngLat;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class SearchNode implements Comparable<SearchNode> {
     private final SearchNode prevNode;
     private final String orderNo;
 
+    private final boolean inCentral;
+
     /**
      * Basic constructor for SearchNode
      * @param location LngLat location of the node
@@ -32,7 +35,7 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param orderNo The order number as a string
      */
     public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
-                      CompassDirection prevDirection, int nSteps, String orderNo) {
+                      CompassDirection prevDirection, int nSteps, String orderNo, boolean inCentral) {
         this.location = location;
         this.pathLength = pathLength;
         this.prevNode = prevNode;
@@ -40,6 +43,7 @@ public class SearchNode implements Comparable<SearchNode> {
         this.prevDirection = prevDirection;
         this.nSteps = nSteps;
         this.orderNo = orderNo;
+        this.inCentral = inCentral;
     }
 
 
@@ -48,20 +52,34 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param destination to be used in computing the heuristic path length including the next node.
      * @return An array with exactly one element for each of the CompassDirections.
      */
-    public SearchNode[] getNextPotentialNodes(LngLat destination) {
-        SearchNode[] nodes = new SearchNode[16];
+    public List<SearchNode> getNextPotentialNodes(LngLat destination) {
+        List<SearchNode> nodes = new ArrayList<>();
         CompassDirection[] directions = CompassDirection.values();
+        CentralArea centralArea = CentralArea.getInstance();
 
-        for(int i = 0; i < directions.length; i++) {
-            LngLat nextLocation = this.location.nextPosition(directions[i]);
+        for (CompassDirection direction : directions) {
+            LngLat nextLocation = this.location.nextPosition(direction);
+            boolean nextInCentral = centralArea.isPointInside(nextLocation);
+
+            if (reEnteringCentral(nextInCentral)) {
+                continue;
+            }
+
             double nextSearchWeight = pathLength + 1 + nextLocation.distanceTo(destination);
 
             SearchNode node = new SearchNode(nextLocation, pathLength + STEP_LENGTH,
-                    nextSearchWeight, this, directions[i], this.nSteps + 1, orderNo);
+                    nextSearchWeight, this, direction, this.nSteps + 1, orderNo,
+                    nextInCentral);
 
-            nodes[i] = node;
+            nodes.add(node);
         }
         return nodes;
+    }
+    private boolean reEnteringCentral(boolean nextInCentral) {
+        if(this.prevNode == null) {
+            return false;
+        }
+        return !prevNode.inCentral && nextInCentral;
     }
 
 

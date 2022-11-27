@@ -71,7 +71,9 @@ public class Controller {
         for(var order : orders) {
             if(order.shouldBeDelivered()) {
                 order.computePath();
-                ordersToDeliver.add(order);
+                if(order.pathFound()) {
+                    ordersToDeliver.add(order);
+                }
             }
         }
         //Orders are sorted in order of moves per pizza delivered
