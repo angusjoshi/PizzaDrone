@@ -61,7 +61,7 @@ public class Order implements Comparable<Order> {
     /**
      * Method to return the list of moves required to fulfill this delivery. Returns an empty list if the
      * path has not yet been computed
-     * @return The list of moves required to fulfill this order, including returning to appletown tower
+     * @return The list of moves required to fulfill this order, including returning to appleton tower
      * and hovering appropriately.
      */
     public List<Move> getDeliveryPath() {
