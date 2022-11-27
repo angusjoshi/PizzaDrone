@@ -69,8 +69,7 @@ public class Order implements Comparable<Order> {
             return new ArrayList<>();
         }
 
-        List<Move> deliveryPath = new ArrayList<>();
-        deliveryPath.addAll(computedPath);
+        List<Move> deliveryPath = new ArrayList<>(computedPath);
 
         Move lastMove = deliveryPath.get(deliveryPath.size() - 1);
         deliveryPath.add(Move.hover(lastMove.orderNo(), lastMove.to()));
@@ -147,7 +146,7 @@ public class Order implements Comparable<Order> {
      * validates the credit card associated with this order, including cvv validation
      * cc number validation, and cc expiry validation.
      */
-    public void validateCreditCard() {
+    protected void validateCreditCard() {
         if(!isCvvValid()) {
             orderOutcome = OrderOutcome.InvalidCvv;
         }
@@ -205,7 +204,7 @@ public class Order implements Comparable<Order> {
      * Setter for the orderoutcome
      * @param orderOutcome orderoutcome to set to
      */
-    public void setOrderOutcome(OrderOutcome orderOutcome) {
+    protected void setOrderOutcome(OrderOutcome orderOutcome) {
         this.orderOutcome = orderOutcome;
     }
 
@@ -221,7 +220,7 @@ public class Order implements Comparable<Order> {
      * Setter for the restaurant that will fulfill this order
      * @param restaurant The restaurant to fulfill this order
      */
-    public void setFulfillingRestaurant(Restaurant restaurant) {
+    protected void setFulfillingRestaurant(Restaurant restaurant) {
         fulfillingRestaurant = restaurant;
     }
 

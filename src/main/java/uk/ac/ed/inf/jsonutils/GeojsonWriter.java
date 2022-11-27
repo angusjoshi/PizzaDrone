@@ -52,7 +52,7 @@ public class GeojsonWriter {
  */
 class FeatureCollection {
     String type;
-    private Feature[] features;
+    private final Feature[] features;
 
     public FeatureCollection(Feature[] features) {
         this.features = features;
@@ -71,9 +71,9 @@ class FeatureCollection {
  * class structure for writing to the geojson
  */
 class Feature {
-    private String type;
-    private LineString geometry;
-    private Object properties;
+    private final String type;
+    private final LineString geometry;
+    private final Object properties;
 
     public Object getProperties() {
         return properties;
@@ -95,8 +95,8 @@ class Feature {
  * class structure for witing to the geojson
  */
 class LineString {
-    private Object[] coordinates;
-    private String type;
+    private final Object[] coordinates;
+    private final String type;
     public LineString(Object[] coordinates) {
         this.coordinates = coordinates;
         this.type = "LineString";

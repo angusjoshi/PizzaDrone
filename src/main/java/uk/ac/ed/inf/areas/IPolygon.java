@@ -5,7 +5,7 @@ package uk.ac.ed.inf.areas;
  */
 public interface IPolygon {
     /**
-     * determine whether or not a point is inside the polygon.
+     * determine whether a point is inside the polygon.
      * @param point the point to check
      * @return true if the point is inside, false otherwise
      */

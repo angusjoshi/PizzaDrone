@@ -71,10 +71,11 @@ public class PathFinder {
             Arrays.sort(potentialNextNodes);
             for(var potentialNextNode : potentialNextNodes) {
                 var roundedLocation = potentialNextNode.getLocation().roundToNearestStep();
+
+                var location = potentialNextNode.getLocation();
                 if(seenBefore.contains(roundedLocation)) {
                     continue;
                 }
-                var location = potentialNextNode.getLocation();
                 if(!centralArea.isPointInside(location) || !noFlyZones.pointIsInNoFlyZone(location)) {
                     nodes.add(potentialNextNode);
                     seenBefore.add(roundedLocation);

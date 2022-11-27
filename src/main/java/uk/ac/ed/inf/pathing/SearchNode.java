@@ -95,14 +95,6 @@ public class SearchNode implements Comparable<SearchNode> {
     }
 
     /**
-     * Gets the number of steps required to get to this node in the search
-     * @return the number of steps as an int
-     */
-    public int getNSteps() {
-        return nSteps;
-    }
-
-    /**
      * Convert the linked-list style search node list into an array of Move type. Reverses the list
      * to the correct direction in the process.
      * @return Array of moves in the correct order

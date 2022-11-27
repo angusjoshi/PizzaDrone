@@ -29,7 +29,7 @@ public class OrderValidator {
         try{
             this.currentDay = DateParser.parseDateString(currentDayString);
         } catch(DateTimeParseException e) {
-            e.printStackTrace();
+            System.err.println("Error, inputted date is invalid! exiting...");
             System.exit(2);
         }
         this.possiblePizzas = new HashSet<>();
@@ -42,7 +42,9 @@ public class OrderValidator {
      * @return A list of validated orders, on the date specified in the constructor call.
      */
     public List<Order> getValidatedOrders() {
+        System.out.println("Retrieving data from rest server...");
         retrieveDataFromRestServer();
+        System.out.println("Validating orders...");
         validateOrders();
         return new ArrayList<>(Arrays.asList(orders));
     }

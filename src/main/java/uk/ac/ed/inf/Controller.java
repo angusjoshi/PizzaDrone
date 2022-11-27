@@ -49,9 +49,11 @@ public class Controller {
         var orderValidator = new OrderValidator(currentDayString);
         var orders = orderValidator.getValidatedOrders();
 
+        System.out.println("Computing flightpath...");
         var ordersToDeliver = chooseOrdersToBeDelivered(orders);
         deliverOrders(ordersToDeliver);
 
+        System.out.println("Writing output to file...");
         JSONWriter.writeOrdersToJson(orders, currentDayString);
 
         JSONWriter.writeDeliveryPathToJson(ordersToDeliver, currentDayString);

@@ -17,7 +17,6 @@ public class App {
 
         String dayString = args[0];
         String apiBase = args[1];
-        String randomSeed = args[2];
 
         Controller controller = new Controller(apiBase, dayString);
         controller.processDay();

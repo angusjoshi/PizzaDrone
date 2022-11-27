@@ -3,7 +3,7 @@ package uk.ac.ed.inf.restutils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * class to be used for desearlising the test request to the rest api
+ * class to be used for deserialising the test request to the rest api
  */
 public class TestResponse {
     @JsonProperty
