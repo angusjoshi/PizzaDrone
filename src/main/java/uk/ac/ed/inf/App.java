@@ -11,7 +11,10 @@ public class App {
      */
     public static void main(String[] args) {
         if(args.length != 3) {
-            System.err.println("Program must receive 3 arguments! exiting...");
+            System.err.println("""
+                    The program expects exactly three arguments!\s
+                    Correct usage: java -jar [jarname].jar [date] [api url string] [random seed]\s
+                    exiting...""");
             System.exit(2);
         }
 

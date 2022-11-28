@@ -1,13 +1,14 @@
 package uk.ac.ed.inf.areas;
 
 import uk.ac.ed.inf.restutils.RestClient;
+import uk.ac.ed.inf.restutils.RestRetrievalFailedException;
 
 /**
  * Singleton class storing all of the NoFlyZones retrieved from the rest sever
  */
 public class NoFlyZones {
     private static NoFlyZones instance;
-    private final NoFlyZone[] noFlyZones;
+    private final IPolygon[] noFlyZones;
 
     /**
      * Lazily initialises the instance of NoFlyZones, and returns it
@@ -27,7 +28,14 @@ public class NoFlyZones {
 
         RestClient restClient = RestClient.getInstance();
 
-        NoFlyZone[] noFlyZones = restClient.getNoFlyZonesFromRestServer();
+        NoFlyZone[] noFlyZones = null;
+        try {
+            noFlyZones = restClient.getNoFlyZonesFromRestServer();
+        } catch(RestRetrievalFailedException e) {
+            e.printStackTrace();
+            System.err.println("Error in retrieving the no fly zones from the rest server! exiting...");
+            System.exit(2);
+        }
 
         return new NoFlyZones(noFlyZones);
     }

@@ -9,6 +9,7 @@ import uk.ac.ed.inf.restutils.BadTestResponseException;
 import uk.ac.ed.inf.restutils.RestClient;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,16 +37,7 @@ public class Controller {
      * Processes order validation, pathfinding and file output for all orders on the required day
      */
     public void processDay() {
-        try {
-            RestClient.initialiseRestClient(apiString);
-        } catch (IOException e) {
-            System.err.println("Error with initialising the rest client! exiting...");
-            System.exit(2);
-        } catch (BadTestResponseException e) {
-            System.err.println("Unexpected test response from rest client! exiting...");
-            System.exit(2);
-        }
-
+        initialiseRestClient();
         var orderValidator = new OrderValidator(currentDayString);
         var orders = orderValidator.getValidatedOrders();
 
@@ -62,6 +54,26 @@ public class Controller {
 
     }
 
+    private void initialiseRestClient() {
+        try {
+            RestClient.initialiseRestClient(apiString);
+
+        } catch(MalformedURLException e) {
+            e.printStackTrace();
+            System.err.println("Error with forming the URL for the rest client!" +
+                    "Please check the inputted URL. exiting...");
+            System.exit(2);
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.err.println("Error with initialising the rest client! exiting...");
+            System.exit(2);
+        } catch (BadTestResponseException e) {
+            e.printStackTrace();
+            System.err.println("Unexpected test response from rest client! exiting...");
+            System.exit(2);
+        }
+    }
+
     private void deliverOrders(List<Order> ordersToDeliver) {
         ordersToDeliver.forEach(Order::deliver);
     }
@@ -76,6 +88,7 @@ public class Controller {
                 }
             }
         }
+
         //Orders are sorted in order of moves per pizza delivered
         Collections.sort(ordersToDeliver);
         int movesLeft = MOVE_CAPACITY;

@@ -33,6 +33,7 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param prevDirection direction taken from the prevNode to reach this one
      * @param nSteps number of steps in the path from the source to this node
      * @param orderNo The order number as a string
+     * @param inCentral if the point in this search node is in the central area
      */
     public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
                       CompassDirection prevDirection, int nSteps, String orderNo, boolean inCentral) {

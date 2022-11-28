@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.order;
 
 import uk.ac.ed.inf.restutils.RestClient;
+import uk.ac.ed.inf.restutils.RestRetrievalFailedException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -15,6 +16,8 @@ import java.util.List;
 public class OrderValidator {
     private static final int ORDER_MAX_PIZZAS = 4;
     private static final int EXTRA_DELIVERY_COST_IN_PENCE = 100;
+    private static final LocalDate EARLIEST_SUPPORTED_DATE = LocalDate.of(2023, 1, 1);
+    private static final LocalDate LATEST_SUPPORTED_DATE = LocalDate.of(2023, 5, 31);
     private LocalDate currentDay;
     private Restaurant[] restaurants;
     private Order[] orders;
@@ -29,12 +32,30 @@ public class OrderValidator {
         try{
             this.currentDay = DateParser.parseDateString(currentDayString);
         } catch(DateTimeParseException e) {
-            System.err.println("Error, inputted date is invalid! exiting...");
+            System.err.println("""
+                    Error, inputted date is invalid! \s
+                    Dates must be in the form yyyy-MM-dd \s
+                    exiting...
+                    """);
+            System.exit(2);
+        }
+        if(!dateIsInSupportedRange(currentDay)) {
+            System.err.println("Inputted day is not in the required range! \n" +
+                    "Current supported dates are within " +
+                    EARLIEST_SUPPORTED_DATE + " to " +
+                    LATEST_SUPPORTED_DATE);
+            System.err.println("exiting...");
             System.exit(2);
         }
         this.possiblePizzas = new HashSet<>();
         this.orders = null;
         this.restaurants = null;
+    }
+    private boolean dateIsInSupportedRange(LocalDate date) {
+        if(date.isBefore(EARLIEST_SUPPORTED_DATE) || date.isAfter(LATEST_SUPPORTED_DATE)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -55,8 +76,13 @@ public class OrderValidator {
         }
         RestClient restClient = RestClient.getInstance();
 
-        orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
-        restaurants = restClient.getRestaurantsFromRestServer();
+        try {
+            orders = restClient.getOrdersFromRestServerOnDate(currentDay.toString());
+            restaurants = restClient.getRestaurantsFromRestServer();
+        } catch(RestRetrievalFailedException e) {
+            e.printStackTrace();
+            System.err.println("Failure in retrieving data from the rest client! exiting...");
+        }
     }
     private void validateOrders() {
         findAllPossiblePizzas();

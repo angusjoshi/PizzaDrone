@@ -239,6 +239,10 @@ public class Order implements Comparable<Order> {
         setOrderOutcome(OrderOutcome.Delivered);
     }
 
+    /**
+     * Determine whether a path has been found to fulfill this order
+     * @return true if a path has been found, false otherwise.
+     */
     public boolean pathFound() {
         return computedPath != null;
     }

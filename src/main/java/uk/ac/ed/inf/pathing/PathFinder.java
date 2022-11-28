@@ -59,7 +59,6 @@ public class PathFinder {
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
         nodes.add(new SearchNode(source, 0, 0, null, null, 0, orderNo,
                 centralArea.isPointInside(source)));
-
         while(true) {
             SearchNode currentNode = nodes.remove();
 
@@ -71,20 +70,23 @@ public class PathFinder {
             }
 
             var potentialNextNodes = currentNode.getNextPotentialNodes(destination);
-            Collections.sort(potentialNextNodes);
+
+            List<LngLat> locationsAdded = new ArrayList<>();
 
             for(var potentialNextNode : potentialNextNodes) {
-                var roundedLocation = potentialNextNode.getLocation().roundToNearestStep();
-
                 var location = potentialNextNode.getLocation();
+                var roundedLocation = location.roundToNearestStep();
+
                 if(seenBefore.contains(roundedLocation)) {
                     continue;
                 }
                 if(!noFlyZones.pointIsInNoFlyZone(location)) {
                     nodes.add(potentialNextNode);
-                    seenBefore.add(roundedLocation);
+                    locationsAdded.add(roundedLocation);
                 }
             }
+            //wait until after adding next nodes to the queue to mark grids as seen before
+            seenBefore.addAll(locationsAdded);
         }
     }
 

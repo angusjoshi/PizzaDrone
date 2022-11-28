@@ -29,7 +29,6 @@ public class NoFlyZonesTest {
         assertTrue(noFlyZones.pointIsInNoFlyZone(inBristoSquareNoFlyZone2));
     }
 
-    //TODO: uncomment these tests when polygon checking is finished.
     @Test
     public void testPointOutsideNoFlyZone1() {
         NoFlyZones noFlyZones = NoFlyZones.getInstance();

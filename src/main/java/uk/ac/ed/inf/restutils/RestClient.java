@@ -58,15 +58,15 @@ public class RestClient {
      * Get the orders from the rest server on a specific date. Returns an empty array if there is an error.
      * @param date the date to get orders for in string form. MUST be in format "yyyy-MM-dd"
      * @return Array of orders, with one element for each of the orders on the required day.
+     * @throws RestRetrievalFailedException if there is an error with making a request to the API
      */
-    public Order[] getOrdersFromRestServerOnDate(String date) {
+    public Order[] getOrdersFromRestServerOnDate(String date) throws RestRetrievalFailedException {
         Order[] orders;
         try{
             URL ordersURL = new URL(baseURLString + ORDERS_EXTENSION + "/" + date);
             orders = new ObjectMapper().readValue(ordersURL, Order[].class);
         } catch(IOException e) {
-            e.printStackTrace();
-            orders = new Order[0];
+            throw new RestRetrievalFailedException();
         }
         return orders;
     }
@@ -74,15 +74,15 @@ public class RestClient {
     /**
      * Get the orders from the rest server for all dates.
      * @return An array of Order type, with one element for each order.
+     * @throws RestRetrievalFailedException if there is an error with making a request to the API
      */
-    public Order[] getOrdersFromRestServer() {
+    public Order[] getOrdersFromRestServer() throws RestRetrievalFailedException {
         Order[] orders;
         try{
             URL ordersURL = new URL(baseURLString + ORDERS_EXTENSION);
             orders = new ObjectMapper().readValue(ordersURL, Order[].class);
         } catch(IOException e) {
-            e.printStackTrace();
-            orders = new Order[0];
+            throw new RestRetrievalFailedException();
         }
         return orders;
     }
@@ -90,15 +90,15 @@ public class RestClient {
     /**
      * Get the restaurant data from the rest server.
      * @return An array of Restaurant type, with one element for each restaurant.
+     * @throws RestRetrievalFailedException if there is an error with making a request to the API
      */
-    public Restaurant[] getRestaurantsFromRestServer() {
+    public Restaurant[] getRestaurantsFromRestServer() throws RestRetrievalFailedException {
         Restaurant[] restaurants;
         try{
             URL restaurantsURL = new URL(baseURLString + RESTAURANTS_EXTENSION);
             restaurants = new ObjectMapper().readValue(restaurantsURL, Restaurant[].class);
         } catch(IOException e) {
-            e.printStackTrace();
-            restaurants = new Restaurant[0];
+            throw new RestRetrievalFailedException();
         }
         return restaurants;
     }
@@ -106,14 +106,15 @@ public class RestClient {
     /**
      * Get the vertices of the centralArea from the rest sever. the vertices are returned in anticlockwise order,
      * @return an array of LngLat with one LngLat for each vertex, in anticlockwise order.
+     * @throws RestRetrievalFailedException if there is an error with making a request to the API
      */
-    public LngLat[] getCentralAreaVerticesFromRestServer() {
-        LngLat[] vertices = null;
+    public LngLat[] getCentralAreaVerticesFromRestServer() throws RestRetrievalFailedException {
+        LngLat[] vertices;
         try {
             URL centralAreaURL = new URL(baseURLString + CENTRAL_AREA_EXTENSION);
             vertices = new ObjectMapper().readValue(centralAreaURL, LngLat[].class);
         } catch(IOException e) {
-            e.printStackTrace();
+            throw new RestRetrievalFailedException();
         }
         return vertices;
     }
@@ -122,14 +123,15 @@ public class RestClient {
      * Get an array of NoFlyZone from the rest server. Each element in the array is a no fly zone for
      * use in the pathfinding computation.
      * @return An array of NoFlyZones each representing a single NoFlyZone polygon
+     * @throws RestRetrievalFailedException if there is an error with making a request to the API
      */
-    public NoFlyZone[] getNoFlyZonesFromRestServer() {
-        NoFlyZone[] noFlyZones = null;
+    public NoFlyZone[] getNoFlyZonesFromRestServer() throws RestRetrievalFailedException {
+        NoFlyZone[] noFlyZones;
         try {
             URL centralAreaURL = new URL(baseURLString + NO_FLY_ZONES_EXTENSION);
             noFlyZones = new ObjectMapper().readValue(centralAreaURL, NoFlyZone[].class);
         } catch(IOException e) {
-            e.printStackTrace();
+            throw new RestRetrievalFailedException();
         }
 
         return noFlyZones;

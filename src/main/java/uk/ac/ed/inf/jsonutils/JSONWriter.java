@@ -38,8 +38,8 @@ public class JSONWriter {
         try {
             objectMapper.writeValue(Paths.get(fileName).toFile(), ordersToWrite);
         } catch (IOException e) {
-            //TODO: revisit error handling
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            System.exit(2);
         }
     }
 
@@ -67,7 +67,8 @@ public class JSONWriter {
         try {
             objectMapper.writeValue(Paths.get(fileName).toFile(), movesForWriting);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            System.exit(2);
         }
     }
 

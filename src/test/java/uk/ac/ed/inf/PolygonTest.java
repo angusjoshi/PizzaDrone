@@ -43,7 +43,6 @@ public class PolygonTest {
         assertTrue(pentagon.isPointInside(inside));
     }
 
-    //TODO: uncomment when polygon checking is done.
 //    @Test
 //    public void testPointCloseToPentagonIsOutside() {
 //        IPolygon pentagon = new Polygon(pentagonVertices);

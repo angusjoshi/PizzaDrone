@@ -2,9 +2,11 @@ package uk.ac.ed.inf;
 
 import org.junit.Test;
 import uk.ac.ed.inf.areas.LngLat;
+import uk.ac.ed.inf.order.Restaurant;
 import uk.ac.ed.inf.pathing.PathFinder;
 import uk.ac.ed.inf.restutils.BadTestResponseException;
 import uk.ac.ed.inf.restutils.RestClient;
+import uk.ac.ed.inf.restutils.RestRetrievalFailedException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,8 +21,13 @@ public class PathFinderTest {
 
         RestClient.initialiseRestClient(Constants.API_BASE);
         RestClient restClient = RestClient.getInstance();
-
-        var restaurants = restClient.getRestaurantsFromRestServer();
+        Restaurant[] restaurants = null;
+        try {
+            restaurants = restClient.getRestaurantsFromRestServer();
+        } catch(RestRetrievalFailedException e) {
+            e.printStackTrace();
+        }
+        assert(restaurants != null);
         var paths = Arrays.stream(restaurants).map(restaurant -> pathFinder.findPathToRestaurant(restaurant, "hehe")).collect(Collectors.toList());
 
         System.out.println("asdkljf;asldf");

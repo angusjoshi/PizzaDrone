@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.areas;
 
 import uk.ac.ed.inf.restutils.RestClient;
+import uk.ac.ed.inf.restutils.RestRetrievalFailedException;
 
 
 /**
@@ -15,7 +16,14 @@ public class CentralArea extends Polygon {
     private static CentralArea centralAreaFactory() {
         RestClient restClient = RestClient.getInstance();
 
-        LngLat[] vertices = restClient.getCentralAreaVerticesFromRestServer();
+        LngLat[] vertices = null;
+        try {
+            vertices = restClient.getCentralAreaVerticesFromRestServer();
+        } catch(RestRetrievalFailedException e) {
+            e.printStackTrace();
+            System.err.println("Error in retrieving the central area data from the rest server! exiting...");
+            System.exit(2);
+        }
         return new CentralArea(vertices);
     }
 
