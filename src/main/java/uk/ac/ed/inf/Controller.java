@@ -93,12 +93,17 @@ public class Controller {
         Collections.sort(ordersToDeliver);
         int movesLeft = MOVE_CAPACITY;
         List<Order> chosenOrdersToDeliver = new ArrayList<>();
+
         for(var order : ordersToDeliver) {
+            // move required for out, back and 2 hovers
+            int movesRequired = 2*order.pathLength() + 2;
+
             //greedily choose the orders with the best move to pizza ratio
-            if(order.pathLength() > movesLeft) {
-                break;
+            if(movesRequired > movesLeft) {
+                continue;
             }
-            movesLeft -= 2*order.pathLength() + 2;
+
+            movesLeft -= movesRequired;
             chosenOrdersToDeliver.add(order);
         }
         return chosenOrdersToDeliver;
