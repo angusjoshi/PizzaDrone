@@ -52,10 +52,7 @@ public class OrderValidator {
         this.restaurants = null;
     }
     private boolean dateIsInSupportedRange(LocalDate date) {
-        if(date.isBefore(EARLIEST_SUPPORTED_DATE) || date.isAfter(LATEST_SUPPORTED_DATE)) {
-            return false;
-        }
-        return true;
+        return !date.isBefore(EARLIEST_SUPPORTED_DATE) && !date.isAfter(LATEST_SUPPORTED_DATE);
     }
 
     /**
@@ -82,6 +79,7 @@ public class OrderValidator {
         } catch(RestRetrievalFailedException e) {
             e.printStackTrace();
             System.err.println("Failure in retrieving data from the rest client! exiting...");
+            System.exit(2);
         }
     }
     private void validateOrders() {
