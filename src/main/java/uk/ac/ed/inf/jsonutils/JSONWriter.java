@@ -2,7 +2,6 @@ package uk.ac.ed.inf.jsonutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.ac.ed.inf.order.Order;
-import uk.ac.ed.inf.order.OrderOutcome;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -24,13 +23,8 @@ public class JSONWriter {
      */
     public static void writeOrdersToJson(List<Order> orders, String currentDayString) {
 
-        Object[] ordersToWrite = orders.stream().map(order ->
-                new OrderForWriting(
-                    order.getOrderNo(),
-                    order.getOrderOutcome(),
-                    order.getPriceTotalInPence()
-                )
-        ).toArray();
+        List<OrderForWriting> ordersToWrite = new ArrayList<>();
+        orders.forEach(order -> ordersToWrite.add(order.getOrderForWriting()));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String fileName = "deliveries-" + currentDayString + ".json";
@@ -62,13 +56,5 @@ public class JSONWriter {
         }
     }
 
-    /**
-     * A record for structuring the Order data for serialization
-     * @param orderNo The order number
-     * @param outcome The order outcome
-     * @param costInPence The cost in pence (as received through the rest client, not recalculated)
-     */
-    record OrderForWriting(String orderNo, OrderOutcome outcome, int costInPence) {
-    }
 
 }

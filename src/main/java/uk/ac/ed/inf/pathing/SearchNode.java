@@ -4,7 +4,7 @@ import uk.ac.ed.inf.areas.CentralArea;
 import uk.ac.ed.inf.areas.LngLat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static uk.ac.ed.inf.areas.LngLat.STEP_LENGTH;
@@ -65,9 +65,14 @@ public class SearchNode implements Comparable<SearchNode> {
 
             double nextSearchWeight = pathLength + 1 + nextLocation.distanceTo(destination);
 
-            SearchNode node = new SearchNode(nextLocation, pathLength + STEP_LENGTH,
-                    nextSearchWeight, this, direction, this.nSteps + 1,
-                    nextInCentral);
+            SearchNode node = new SearchNode(
+                    nextLocation,
+                    pathLength + STEP_LENGTH,
+                    nextSearchWeight, this,
+                    direction,
+                    this.nSteps + 1,
+                    nextInCentral
+            );
 
             nodes.add(node);
         }
@@ -116,18 +121,23 @@ public class SearchNode implements Comparable<SearchNode> {
      * @return Array of moves in the correct order
      */
     public List<Move> toMoveList() {
-        Move[] moves = new Move[nSteps];
+        List<Move> moves = new ArrayList<>();
         SearchNode currentNode = this;
-        int counter = nSteps;
-        while(counter > 0) {
+
+        while(currentNode.prevNode != null) {
             var prevNode = currentNode.prevNode;
-            Move move = new Move(prevNode.getLocation(), currentNode.location,
-                    currentNode.getPrevDirection(), CalculationTimer.getTicksSinceCalculationStarted());
-            moves[counter - 1] = move;
-            counter--;
+            Move move = new Move(
+                    prevNode.getLocation(),
+                    currentNode.location,
+                    currentNode.getPrevDirection(),
+                    CalculationTimer.getTicksSinceCalculationStarted()
+            );
+            moves.add(move);
             currentNode = prevNode;
         }
-        return new ArrayList<>(Arrays.asList(moves));
+
+        Collections.reverse(moves);
+        return moves;
     }
 
     private CompassDirection getPrevDirection() {

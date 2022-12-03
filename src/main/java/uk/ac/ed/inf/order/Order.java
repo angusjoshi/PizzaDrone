@@ -3,6 +3,7 @@ package uk.ac.ed.inf.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.GenericValidator;
 import uk.ac.ed.inf.jsonutils.MoveForWriting;
+import uk.ac.ed.inf.jsonutils.OrderForWriting;
 import uk.ac.ed.inf.pathing.CompassDirection;
 import uk.ac.ed.inf.pathing.Move;
 import uk.ac.ed.inf.pathing.PathFinder;
@@ -41,11 +42,16 @@ public class Order implements Comparable<Order> {
      * @param priceTotalInPence Claimed price total in pence.
      * @param orderItems Array of ordered pizzas as strings.
      */
-    public Order(@JsonProperty("orderNo") String orderNo, @JsonProperty("orderDate") String orderDateString,
-                 @JsonProperty("customer") String customer,@JsonProperty("creditCardNumber") String creditCardNumber,
-                 @JsonProperty("creditCardExpiry") String cardExpiryString, @JsonProperty("cvv") String cvv,
-                 @JsonProperty("priceTotalInPence") int priceTotalInPence,
-                 @JsonProperty("orderItems") String[] orderItems) {
+    public Order(
+                @JsonProperty("orderNo") String orderNo,
+                @JsonProperty("orderDate") String orderDateString,
+                @JsonProperty("customer") String customer,
+                @JsonProperty("creditCardNumber") String creditCardNumber,
+                @JsonProperty("creditCardExpiry") String cardExpiryString,
+                @JsonProperty("cvv") String cvv,
+                @JsonProperty("priceTotalInPence") int priceTotalInPence,
+                @JsonProperty("orderItems") String[] orderItems
+    ) {
 
         this.orderNo = orderNo;
         this.customer = customer;
@@ -72,7 +78,6 @@ public class Order implements Comparable<Order> {
         }
 
         List<Move> deliveryPath = new ArrayList<>(computedPath);
-
         Move lastMove = deliveryPath.get(deliveryPath.size() - 1);
         deliveryPath.add(Move.hover(lastMove.to()));
 
@@ -116,7 +121,7 @@ public class Order implements Comparable<Order> {
         if(!this.shouldBeDelivered()) {
             return;
         }
-        this.computedPath = PathFinder.getInstance().findPathToRestaurant(fulfillingRestaurant, orderNo);
+        this.computedPath = PathFinder.getInstance().findPathToRestaurant(fulfillingRestaurant);
     }
     private double movesPerPizza() {
         return ((double) computedPath.size()) / orderItems.length;
@@ -254,7 +259,7 @@ public class Order implements Comparable<Order> {
      * @return the list of moves formatted correctly for json writing
      */
     public List<MoveForWriting> getMovesForWriting() {
-        List<MoveForWriting> movesForWriting = computedPath.stream().map(
+        return computedPath.stream().map(
                 move -> new MoveForWriting(
                         orderNo,
                         move.from().lng(),
@@ -265,6 +270,17 @@ public class Order implements Comparable<Order> {
                         move.ticksSinceStartOfCalculation()
                 )
         ).toList();
-        return movesForWriting;
+    }
+
+    /**
+     * Gets the object for writing the order outcome to json
+     * @return the order object for writing to the json
+     */
+    public OrderForWriting getOrderForWriting() {
+        return new OrderForWriting(
+                this.getOrderNo(),
+                this.getOrderOutcome(),
+                this.getPriceTotalInPence()
+        );
     }
 }

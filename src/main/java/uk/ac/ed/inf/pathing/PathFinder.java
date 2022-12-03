@@ -37,20 +37,19 @@ public class PathFinder {
     /**
      * Finds a path from appleton tower to a given restaurant.
      * @param restaurant The restaurant to path to
-     * @param orderNo The order number
      * @return The list of moves to a restaurant
      */
-    public List<Move> findPathToRestaurant(Restaurant restaurant, String orderNo) {
+    public List<Move> findPathToRestaurant(Restaurant restaurant) {
         if(pathsAlreadyComputed.containsKey(restaurant)) {
             return pathsAlreadyComputed.get(restaurant);
         }
 
-        var path = findPath(APPLETON_TOWER, restaurant.getLngLat(), orderNo);
+        var path = findPath(APPLETON_TOWER, restaurant.getLngLat());
         pathsAlreadyComputed.put(restaurant, path);
         return path;
     }
 
-    private List<Move> findPath(LngLat source, LngLat destination, String orderNo) {
+    private List<Move> findPath(LngLat source, LngLat destination) {
         seenBefore.clear();
         CentralArea centralArea = CentralArea.getInstance();
         NoFlyZones noFlyZones = NoFlyZones.getInstance();
@@ -59,7 +58,8 @@ public class PathFinder {
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
         nodes.add(new SearchNode(source, 0, 0, null, null, 0,
                 centralArea.isPointInside(source)));
-        while(true) {
+
+        while(!nodes.isEmpty()) {
             SearchNode currentNode = nodes.remove();
 
             if(currentNode.isSearchTooLong()) {
@@ -88,6 +88,9 @@ public class PathFinder {
             //wait until after adding next nodes to the queue to mark grids as seen before
             seenBefore.addAll(locationsAdded);
         }
+
+        //if we run out of nodes before finding destination
+        return null;
     }
 
 }

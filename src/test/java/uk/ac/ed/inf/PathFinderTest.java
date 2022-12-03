@@ -28,7 +28,7 @@ public class PathFinderTest {
             e.printStackTrace();
         }
         assert(restaurants != null);
-        var paths = Arrays.stream(restaurants).map(restaurant -> pathFinder.findPathToRestaurant(restaurant, "hehe")).collect(Collectors.toList());
+        var paths = Arrays.stream(restaurants).map(restaurant -> pathFinder.findPathToRestaurant(restaurant)).collect(Collectors.toList());
 
         System.out.println("asdkljf;asldf");
     }
