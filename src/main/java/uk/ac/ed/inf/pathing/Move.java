@@ -9,23 +9,21 @@ import java.util.List;
 
 /**
  * Record to store a move resultant from the pathfinding process.
- * @param orderNo The order number
  * @param from The location at the start of the move
  * @param to The location at the end of the move
  * @param direction The compass direction associated with the move.
  * @param ticksSinceStartOfCalculation Milliseconds passed since the start of the calculation
  *                                     when this move was computed.
  */
-public record Move(String orderNo, LngLat from, LngLat to,
+public record Move(LngLat from, LngLat to,
                    CompassDirection direction, int ticksSinceStartOfCalculation) {
     /**
      * Gets a hover move at a given location
-     * @param orderNo The order number
      * @param at Location to hover at.
      * @return The hover move at the required location
      */
-    public static Move hover(String orderNo, LngLat at) {
-        return new Move(orderNo, at, at, null, CalculationTimer.getTicksSinceCalculationStarted());
+    public static Move hover(LngLat at) {
+        return new Move(at, at, null, CalculationTimer.getTicksSinceCalculationStarted());
     }
 
     /**
@@ -33,7 +31,7 @@ public record Move(String orderNo, LngLat from, LngLat to,
      * @return A new move instance opposite to this one
      */
     public Move reverseMove() {
-        return new Move(orderNo, to, from, direction.getOppositeDirection(),
+        return new Move(to, from, direction.getOppositeDirection(),
                 CalculationTimer.getTicksSinceCalculationStarted());
     }
 

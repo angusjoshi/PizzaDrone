@@ -1,13 +1,12 @@
 package uk.ac.ed.inf.jsonutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import uk.ac.ed.inf.pathing.Move;
 import uk.ac.ed.inf.order.Order;
 import uk.ac.ed.inf.order.OrderOutcome;
-import uk.ac.ed.inf.pathing.CompassDirection;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,19 +49,10 @@ public class JSONWriter {
      * @param currentDayString The date of the orders.
      */
     public static void writeDeliveryPathToJson(List<Order> ordersToDeliver, String currentDayString) {
-        List<Move> flightPath = Move.getFlightPath(ordersToDeliver);
+        List<MoveForWriting> movesForWriting = new ArrayList<>();
+        ordersToDeliver.forEach(order -> movesForWriting.addAll(order.getMovesForWriting()));
+
         ObjectMapper objectMapper = new ObjectMapper();
-        Object[] movesForWriting = flightPath.stream().map(
-                move -> new MoveForWriting(
-                        move.orderNo(),
-                        move.from().lng(),
-                        move.from().lat(),
-                        CompassDirection.getAngleAsDegrees(move.direction()),
-                        move.to().lng(),
-                        move.to().lat(),
-                        move.ticksSinceStartOfCalculation()
-                )
-        ).toArray();
         String fileName = "flightpath-" + currentDayString + ".json";
         try {
             objectMapper.writeValue(Paths.get(fileName).toFile(), movesForWriting);
@@ -81,19 +71,4 @@ public class JSONWriter {
     record OrderForWriting(String orderNo, OrderOutcome outcome, int costInPence) {
     }
 
-    /**
-     * A record for structuring the moves in the flightpath of the drone
-     * @param orderNo The order number
-     * @param fromLongitude Longitude before the move
-     * @param fromLatitude Latitude before the move
-     * @param angle Angle of direction of the move in degrees
-     * @param toLongitude Longitude after the move
-     * @param toLatitude Latitude after the move
-     * @param ticksSinceStartOfCalculation Number of milliseconds past since the beginning of the pathfinding
-     *                                     when the move was computed.
-     */
-    record MoveForWriting(String orderNo, double fromLongitude, double fromLatitude,
-                          Double angle, double toLongitude, double toLatitude,
-                          int ticksSinceStartOfCalculation) {
-    }
 }

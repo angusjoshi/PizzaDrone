@@ -20,7 +20,6 @@ public class SearchNode implements Comparable<SearchNode> {
     private final double pathLength;
     private final int nSteps;
     private final SearchNode prevNode;
-    private final String orderNo;
 
     private final boolean inCentral;
 
@@ -32,18 +31,16 @@ public class SearchNode implements Comparable<SearchNode> {
      * @param prevNode previous node in the search for this path
      * @param prevDirection direction taken from the prevNode to reach this one
      * @param nSteps number of steps in the path from the source to this node
-     * @param orderNo The order number as a string
      * @param inCentral if the point in this search node is in the central area
      */
     public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
-                      CompassDirection prevDirection, int nSteps, String orderNo, boolean inCentral) {
+                      CompassDirection prevDirection, int nSteps, boolean inCentral) {
         this.location = location;
         this.pathLength = pathLength;
         this.prevNode = prevNode;
         this.searchWeight = searchWeight;
         this.prevDirection = prevDirection;
         this.nSteps = nSteps;
-        this.orderNo = orderNo;
         this.inCentral = inCentral;
     }
 
@@ -69,7 +66,7 @@ public class SearchNode implements Comparable<SearchNode> {
             double nextSearchWeight = pathLength + 1 + nextLocation.distanceTo(destination);
 
             SearchNode node = new SearchNode(nextLocation, pathLength + STEP_LENGTH,
-                    nextSearchWeight, this, direction, this.nSteps + 1, orderNo,
+                    nextSearchWeight, this, direction, this.nSteps + 1,
                     nextInCentral);
 
             nodes.add(node);
@@ -124,17 +121,13 @@ public class SearchNode implements Comparable<SearchNode> {
         int counter = nSteps;
         while(counter > 0) {
             var prevNode = currentNode.prevNode;
-            Move move = new Move(currentNode.getOrderNo(), prevNode.getLocation(), currentNode.location,
+            Move move = new Move(prevNode.getLocation(), currentNode.location,
                     currentNode.getPrevDirection(), CalculationTimer.getTicksSinceCalculationStarted());
             moves[counter - 1] = move;
             counter--;
             currentNode = prevNode;
         }
         return new ArrayList<>(Arrays.asList(moves));
-    }
-
-    private String getOrderNo() {
-        return orderNo;
     }
 
     private CompassDirection getPrevDirection() {

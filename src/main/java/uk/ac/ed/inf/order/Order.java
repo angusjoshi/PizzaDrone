@@ -2,6 +2,8 @@ package uk.ac.ed.inf.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.validator.GenericValidator;
+import uk.ac.ed.inf.jsonutils.MoveForWriting;
+import uk.ac.ed.inf.pathing.CompassDirection;
 import uk.ac.ed.inf.pathing.Move;
 import uk.ac.ed.inf.pathing.PathFinder;
 
@@ -72,13 +74,13 @@ public class Order implements Comparable<Order> {
         List<Move> deliveryPath = new ArrayList<>(computedPath);
 
         Move lastMove = deliveryPath.get(deliveryPath.size() - 1);
-        deliveryPath.add(Move.hover(lastMove.orderNo(), lastMove.to()));
+        deliveryPath.add(Move.hover(lastMove.to()));
 
         List<Move> reversedPath = Move.reverseMoveList(computedPath);
         deliveryPath.addAll(reversedPath);
 
         lastMove = deliveryPath.get(deliveryPath.size() - 1);
-        deliveryPath.add(Move.hover(lastMove.orderNo(), lastMove.to()));
+        deliveryPath.add(Move.hover(lastMove.to()));
 
         return deliveryPath;
     }
@@ -245,5 +247,24 @@ public class Order implements Comparable<Order> {
      */
     public boolean pathFound() {
         return computedPath != null;
+    }
+
+    /**
+     * Gets the list of moves for writing to the json
+     * @return the list of moves formatted correctly for json writing
+     */
+    public List<MoveForWriting> getMovesForWriting() {
+        List<MoveForWriting> movesForWriting = computedPath.stream().map(
+                move -> new MoveForWriting(
+                        orderNo,
+                        move.from().lng(),
+                        move.from().lat(),
+                        CompassDirection.getAngleAsDegrees(move.direction()),
+                        move.to().lng(),
+                        move.to().lat(),
+                        move.ticksSinceStartOfCalculation()
+                )
+        ).toList();
+        return movesForWriting;
     }
 }
