@@ -56,8 +56,7 @@ public class PathFinder {
 
         //priority is determined by length of path + distance to destination
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
-        nodes.add(new SearchNode(source, 0, 0, null, null, 0,
-                centralArea.isPointInside(source)));
+        nodes.add(SearchNode.getFirstNode(source));
 
         while(!nodes.isEmpty()) {
             SearchNode currentNode = nodes.remove();

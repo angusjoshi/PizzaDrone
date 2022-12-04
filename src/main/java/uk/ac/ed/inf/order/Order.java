@@ -283,4 +283,8 @@ public class Order implements Comparable<Order> {
                 this.getPriceTotalInPence()
         );
     }
+
+    public String getDateString() {
+        return orderDate.toString();
+    }
 }

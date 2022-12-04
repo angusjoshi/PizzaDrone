@@ -46,18 +46,14 @@ public class Controller {
         deliverOrders(ordersToDeliver);
 
         System.out.println("Writing output to file...");
-        JSONWriter.writeOrdersToJson(orders, currentDayString);
-
-        JSONWriter.writeDeliveryPathToJson(ordersToDeliver, currentDayString);
-
-        GeojsonWriter.writeDeliveryPathToGeojson(ordersToDeliver, currentDayString);
-
+        JSONWriter.writeOrdersToJson(orders);
+        JSONWriter.writeDeliveryPathToJson(ordersToDeliver);
+        GeojsonWriter.writeDeliveryPathToGeojson(ordersToDeliver);
     }
 
     private void initialiseRestClient() {
         try {
             RestClient.initialiseRestClient(apiString);
-
         } catch(MalformedURLException e) {
             e.printStackTrace();
             System.err.println("Error with forming the URL for the rest client!" +

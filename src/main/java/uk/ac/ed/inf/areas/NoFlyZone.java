@@ -14,7 +14,10 @@ public class NoFlyZone extends Polygon {
      * @param coordindates coordinates of the vertices, in anticlockwise order from
      *                     the top-left. Stricly an array of length 2 arrays.
      */
-    public NoFlyZone(@JsonProperty("name") String name, @JsonProperty("coordinates") double[][] coordindates) {
+    public NoFlyZone(
+            @JsonProperty("name") String name,
+            @JsonProperty("coordinates") double[][] coordindates
+    ) {
         super(coordindates);
         this.name = name;
     }

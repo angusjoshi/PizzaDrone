@@ -25,8 +25,12 @@ public class Restaurant {
     public Menu[] getMenu() {
         return menu;
     }
-    private Restaurant(@JsonProperty("name") String name, @JsonProperty("longitude") double lng,
-                       @JsonProperty("latitude") double lat, @JsonProperty("menu") Menu[] menu) {
+    private Restaurant(
+            @JsonProperty("name") String name,
+            @JsonProperty("longitude") double lng,
+            @JsonProperty("latitude") double lat,
+            @JsonProperty("menu") Menu[] menu
+    ) {
         this.name = name;
         this.lngLat = new LngLat(lng, lat);
         this.menu = menu;

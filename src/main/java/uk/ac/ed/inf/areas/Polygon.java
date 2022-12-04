@@ -10,7 +10,7 @@ import static java.lang.Math.min;
  */
 public class Polygon implements IPolygon {
     private IPolygon boundingRectangle;
-    private LngLat outsidePolygon;
+    private LngLat pointOutsidePolygon;
     private final LngLat[] vertices;
 
     /**
@@ -57,7 +57,7 @@ public class Polygon implements IPolygon {
 
         this.boundingRectangle = new Rectangle(boundingRectangleTopLeft, boundingRectangleTopRight);
 
-        this.outsidePolygon = new LngLat(maxLng + LngLat.STEP_LENGTH, minLat + ((maxLat - minLat) / 2));
+        this.pointOutsidePolygon = new LngLat(maxLng + LngLat.STEP_LENGTH, minLat + ((maxLat - minLat) / 2));
     }
 
     /**
@@ -77,7 +77,7 @@ public class Polygon implements IPolygon {
         for(int i = 0; i < vertices.length - 1; i++) {
             var vertexOne = vertices[i];
             var vertexTwo = vertices[i + 1];
-            if(LngLat.lineSegmentsIntersect(outsidePolygon, point,  vertexOne, vertexTwo)) {
+            if(LngLat.lineSegmentsIntersect(pointOutsidePolygon, point,  vertexOne, vertexTwo)) {
                 edgeIntersections++;
             }
         }

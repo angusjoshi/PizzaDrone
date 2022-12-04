@@ -23,18 +23,15 @@ public class SearchNode implements Comparable<SearchNode> {
 
     private final boolean inCentral;
 
-    /**
-     * Basic constructor for SearchNode
-     * @param location LngLat location of the node
-     * @param pathLength length of the path computed up to this node
-     * @param searchWeight computed heuristic path length from source to destination including this node
-     * @param prevNode previous node in the search for this path
-     * @param prevDirection direction taken from the prevNode to reach this one
-     * @param nSteps number of steps in the path from the source to this node
-     * @param inCentral if the point in this search node is in the central area
-     */
-    public SearchNode(LngLat location, double pathLength, double searchWeight, SearchNode prevNode,
-                      CompassDirection prevDirection, int nSteps, boolean inCentral) {
+    private SearchNode(
+            LngLat location,
+            double pathLength,
+            double searchWeight,
+            SearchNode prevNode,
+            CompassDirection prevDirection,
+            int nSteps,
+            boolean inCentral
+    ) {
         this.location = location;
         this.pathLength = pathLength;
         this.prevNode = prevNode;
@@ -44,6 +41,23 @@ public class SearchNode implements Comparable<SearchNode> {
         this.inCentral = inCentral;
     }
 
+    /**
+     * Factory method to get the first node in a search, given the starting location.
+     * @param source the starting location
+     * @return the first node to be used in the search
+     */
+    public static SearchNode getFirstNode(LngLat source) {
+        CentralArea centralArea = CentralArea.getInstance();
+        return new SearchNode(
+                source,
+                0,
+                0,
+                null,
+                null,
+                0,
+                centralArea.isPointInside(source)
+        );
+    }
 
     /**
      * Get adjacent nodes to be used in search
@@ -63,12 +77,14 @@ public class SearchNode implements Comparable<SearchNode> {
                 continue;
             }
 
-            double nextSearchWeight = pathLength + 1 + nextLocation.distanceTo(destination);
+            double nextPathLength = pathLength + STEP_LENGTH;
+            double nextSearchWeight = nextPathLength + nextLocation.distanceTo(destination);
 
             SearchNode node = new SearchNode(
                     nextLocation,
-                    pathLength + STEP_LENGTH,
-                    nextSearchWeight, this,
+                    nextPathLength,
+                    nextSearchWeight,
+                    this,
                     direction,
                     this.nSteps + 1,
                     nextInCentral

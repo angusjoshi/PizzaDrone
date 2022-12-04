@@ -19,10 +19,13 @@ public class JSONWriter {
      * Writes a list of orders to a json in the working directory, with order outcomes.
      * Filename will be of the format "deliveries-YYYY-MM_dd.geojson"
      * @param orders The list of orders to be written
-     * @param currentDayString the date of the orders.
      */
-    public static void writeOrdersToJson(List<Order> orders, String currentDayString) {
+    public static void writeOrdersToJson(List<Order> orders) {
+        if(orders.size() == 0) {
+            return;
+        }
 
+        String currentDayString = orders.get(0).getDateString();
         List<OrderForWriting> ordersToWrite = new ArrayList<>();
         orders.forEach(order -> ordersToWrite.add(order.getOrderForWriting()));
 
@@ -40,9 +43,13 @@ public class JSONWriter {
      * Write the computed delivery flightpath to a json in the current working directory.
      * The filename will be of the form "flightpath-YYYY-MM_dd.json"
      * @param ordersToDeliver The orders that have been selected to be delivered.
-     * @param currentDayString The date of the orders.
      */
-    public static void writeDeliveryPathToJson(List<Order> ordersToDeliver, String currentDayString) {
+    public static void writeDeliveryPathToJson(List<Order> ordersToDeliver) {
+        if(ordersToDeliver.size() == 0) {
+            return;
+        }
+
+        String currentDayString = ordersToDeliver.get(0).getDateString();
         List<MoveForWriting> movesForWriting = new ArrayList<>();
         ordersToDeliver.forEach(order -> movesForWriting.addAll(order.getMovesForWriting()));
 

@@ -15,15 +15,24 @@ import java.util.List;
  * @param ticksSinceStartOfCalculation Milliseconds passed since the start of the calculation
  *                                     when this move was computed.
  */
-public record Move(LngLat from, LngLat to,
-                   CompassDirection direction, int ticksSinceStartOfCalculation) {
+public record Move(
+        LngLat from,
+        LngLat to,
+        CompassDirection direction,
+        int ticksSinceStartOfCalculation
+    ) {
     /**
      * Gets a hover move at a given location
      * @param at Location to hover at.
      * @return The hover move at the required location
      */
     public static Move hover(LngLat at) {
-        return new Move(at, at, null, CalculationTimer.getTicksSinceCalculationStarted());
+        return new Move(
+                at,
+                at,
+                null,
+                CalculationTimer.getTicksSinceCalculationStarted()
+        );
     }
 
     /**
@@ -31,8 +40,12 @@ public record Move(LngLat from, LngLat to,
      * @return A new move instance opposite to this one
      */
     public Move reverseMove() {
-        return new Move(to, from, direction.getOppositeDirection(),
-                CalculationTimer.getTicksSinceCalculationStarted());
+        return new Move(
+                to,
+                from,
+                direction.getOppositeDirection(),
+                CalculationTimer.getTicksSinceCalculationStarted()
+        );
     }
 
     /**

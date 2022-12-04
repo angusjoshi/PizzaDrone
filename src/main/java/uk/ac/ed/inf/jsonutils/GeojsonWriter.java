@@ -23,9 +23,13 @@ public class GeojsonWriter {
      * The filename will be in the form "drone-YYYY_MM_dd.geojson"
      * @param ordersToDeliver The list of orders that are to be delivered. Orders must be computed prior with
      *                        the appropriate method in each order instance
-     * @param currentDayString The current day date string
      */
-    public static void writeDeliveryPathToGeojson(List<Order> ordersToDeliver, String currentDayString) {
+    public static void writeDeliveryPathToGeojson(List<Order> ordersToDeliver) {
+        if(ordersToDeliver.size() == 0) {
+            return;
+        }
+
+        String currentDayString = ordersToDeliver.get(0).getDateString();
         List<Move> flightPath = Move.getFlightPath(ordersToDeliver);
         var coordinates =  flightPath.stream()
                 .map(Move::fromAsCoordinates).toArray();
@@ -51,7 +55,7 @@ public class GeojsonWriter {
  * class structure for writing to the geojson
  */
 class FeatureCollection {
-    String type;
+    private final String type;
     private final Feature[] features;
 
     public FeatureCollection(Feature[] features) {
