@@ -3,6 +3,7 @@ package uk.ac.ed.inf;
 import uk.ac.ed.inf.jsonutils.GeojsonWriter;
 import uk.ac.ed.inf.jsonutils.JSONWriter;
 import uk.ac.ed.inf.order.Order;
+import uk.ac.ed.inf.order.OrderChoiceOptimizer;
 import uk.ac.ed.inf.order.OrderValidator;
 import uk.ac.ed.inf.pathing.CalculationTimer;
 import uk.ac.ed.inf.restutils.BadTestResponseException;
@@ -11,14 +12,13 @@ import uk.ac.ed.inf.restutils.RestClient;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Main controller for the application
  */
 public class Controller {
-    private static final int MOVE_CAPACITY = 2000;
+    protected static final int MOVE_CAPACITY = 2000;
 
     private final String apiString;
     private final String currentDayString;
@@ -85,23 +85,6 @@ public class Controller {
             }
         }
 
-        //Orders are sorted in order of moves per pizza delivered
-        Collections.sort(ordersToDeliver);
-        int movesLeft = MOVE_CAPACITY;
-        List<Order> chosenOrdersToDeliver = new ArrayList<>();
-
-        for(var order : ordersToDeliver) {
-            // move required for out, back and 2 hovers
-            int movesRequired = 2*order.pathLength() + 2;
-
-            //greedily choose the orders with the best move to pizza ratio
-            if(movesRequired > movesLeft) {
-                continue;
-            }
-
-            movesLeft -= movesRequired;
-            chosenOrdersToDeliver.add(order);
-        }
-        return chosenOrdersToDeliver;
+        return OrderChoiceOptimizer.getOptimizedOrderChoices(ordersToDeliver, MOVE_CAPACITY);
     }
 }

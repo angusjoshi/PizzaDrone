@@ -2,7 +2,6 @@ package uk.ac.ed.inf.pathing;
 
 import uk.ac.ed.inf.areas.LngLat;
 import uk.ac.ed.inf.order.Restaurant;
-import uk.ac.ed.inf.areas.CentralArea;
 import uk.ac.ed.inf.areas.NoFlyZones;
 
 import java.util.*;
@@ -51,8 +50,6 @@ public class PathFinder {
 
     private List<Move> findPath(LngLat source, LngLat destination) {
         seenBefore.clear();
-        CentralArea centralArea = CentralArea.getInstance();
-        NoFlyZones noFlyZones = NoFlyZones.getInstance();
 
         //priority is determined by length of path + distance to destination
         PriorityQueue<SearchNode> nodes = new PriorityQueue<>();
@@ -64,24 +61,18 @@ public class PathFinder {
             if(currentNode.isSearchTooLong()) {
                 return null;
             }
+
             if(currentNode.getLocation().closeTo(destination)) {
                 return currentNode.toMoveList();
             }
 
             var potentialNextNodes = currentNode.getNextPotentialNodes(destination);
-
             List<LngLat> locationsAdded = new ArrayList<>();
 
             for(var potentialNextNode : potentialNextNodes) {
-                var location = potentialNextNode.getLocation();
-                var roundedLocation = location.roundToNearestStep();
-
-                if(seenBefore.contains(roundedLocation)) {
-                    continue;
-                }
-                if(!noFlyZones.pointIsInNoFlyZone(location)) {
+                if(nodeShouldBeAdded(potentialNextNode)) {
                     nodes.add(potentialNextNode);
-                    locationsAdded.add(roundedLocation);
+                    locationsAdded.add(potentialNextNode.getLocation().roundToNearestStep());
                 }
             }
             //wait until after adding next nodes to the queue to mark grids as seen before
@@ -91,6 +82,16 @@ public class PathFinder {
         //if we run out of nodes before finding destination
         return null;
     }
+    private boolean nodeShouldBeAdded(SearchNode node) {
+        var location = node.getLocation();
+        var roundedLocation = location.roundToNearestStep();
 
+        if(seenBefore.contains(roundedLocation)) {
+            return false;
+        }
+
+        var noFlyZones = NoFlyZones.getInstance();
+        return !noFlyZones.pointIsInNoFlyZone(location);
+    }
 }
 

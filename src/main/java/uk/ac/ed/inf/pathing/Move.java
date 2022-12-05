@@ -43,7 +43,7 @@ public record Move(
         return new Move(
                 to,
                 from,
-                direction.getOppositeDirection(),
+                direction.reverseDirection(),
                 CalculationTimer.getTicksSinceCalculationStarted()
         );
     }

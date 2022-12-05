@@ -10,14 +10,14 @@ import static org.junit.Assert.assertNotEquals;
 public class CompassDirectionTest {
     @Test
     public void testOppositeDirection() {
-        assertEquals(CompassDirection.S, CompassDirection.N.getOppositeDirection());
-        assertEquals(CompassDirection.N, CompassDirection.S.getOppositeDirection());
-        assertNotEquals(CompassDirection.S, CompassDirection.S.getOppositeDirection());
-        assertNotEquals(CompassDirection.N, CompassDirection.N.getOppositeDirection());
+        assertEquals(CompassDirection.S, CompassDirection.N.reverseDirection());
+        assertEquals(CompassDirection.N, CompassDirection.S.reverseDirection());
+        assertNotEquals(CompassDirection.S, CompassDirection.S.reverseDirection());
+        assertNotEquals(CompassDirection.N, CompassDirection.N.reverseDirection());
     }
     @Test
     public void testOppositeDirection2() {
-        assertEquals(CompassDirection.E, CompassDirection.W.getOppositeDirection());
+        assertEquals(CompassDirection.E, CompassDirection.W.reverseDirection());
     }
 
     @Test

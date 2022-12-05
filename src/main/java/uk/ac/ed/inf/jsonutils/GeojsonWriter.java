@@ -49,75 +49,71 @@ public class GeojsonWriter {
             throw new RuntimeException(e);
         }
     }
-}
+    private static class FeatureCollection {
+        private final String type;
+        private final Feature[] features;
 
-/**
- * class structure for writing to the geojson
- */
-class FeatureCollection {
-    private final String type;
-    private final Feature[] features;
+        public FeatureCollection(Feature[] features) {
+            this.features = features;
+            this.type = "FeatureCollection";
+        }
 
-    public FeatureCollection(Feature[] features) {
-        this.features = features;
-        this.type = "FeatureCollection";
-    }
-
-    public String getType() {
-        return this.type;
-    }
-    public Feature[] getFeatures() {
-        return this.features;
-    }
-}
-
-/**
- * class structure for writing to the geojson
- */
-class Feature {
-    private final String type;
-    private final LineString geometry;
-    private final Object properties;
-
-    public Object getProperties() {
-        return properties;
-    }
-    public Feature(LineString geometry) {
-        this.type = "Feature";
-        this.geometry = geometry;
-        this.properties = new Properties();
-    }
-    public String getType() {
-        return this.type;
-    }
-    public LineString getGeometry() {
-        return this.geometry;
-    }
-}
-
-/**
- * class structure for witing to the geojson
- */
-class LineString {
-    private final Object[] coordinates;
-    private final String type;
-    public LineString(Object[] coordinates) {
-        this.coordinates = coordinates;
-        this.type = "LineString";
+        public String getType() {
+            return this.type;
+        }
+        public Feature[] getFeatures() {
+            return this.features;
+        }
     }
 
-    public Object[] getCoordinates() {
-        return this.coordinates;
-    }
-    public String getType() {
-        return this.type;
-    }
-}
+    /**
+     * class structure for writing to the geojson
+     */
+    private static class Feature {
+        private final String type;
+        private final LineString geometry;
+        private final Object properties;
 
-/**
- * class structure for writing to the geojson
- */
-@JsonSerialize
-class Properties {
-    public Properties(){}
+        public Object getProperties() {
+            return properties;
+        }
+        public Feature(LineString geometry) {
+            this.type = "Feature";
+            this.geometry = geometry;
+            this.properties = new Properties();
+        }
+        public String getType() {
+            return this.type;
+        }
+        public LineString getGeometry() {
+            return this.geometry;
+        }
+    }
+
+    /**
+     * class structure for witing to the geojson
+     */
+    private static class LineString {
+        private final Object[] coordinates;
+        private final String type;
+        public LineString(Object[] coordinates) {
+            this.coordinates = coordinates;
+            this.type = "LineString";
+        }
+
+        public Object[] getCoordinates() {
+            return this.coordinates;
+        }
+        public String getType() {
+            return this.type;
+        }
+    }
+
+    /**
+     * class structure for writing to the geojson
+     */
+    @JsonSerialize
+    private static class Properties {
+        public Properties(){}
+    }
 }

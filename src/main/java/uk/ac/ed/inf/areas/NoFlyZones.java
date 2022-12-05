@@ -25,7 +25,6 @@ public class NoFlyZones {
         this.noFlyZones = noFlyZones;
     }
     private static NoFlyZones noFlyZonesFactory() {
-
         RestClient restClient = RestClient.getInstance();
 
         NoFlyZone[] noFlyZones = null;

@@ -287,4 +287,10 @@ public class Order implements Comparable<Order> {
     public String getDateString() {
         return orderDate.toString();
     }
+    public int getNumberOfPizzas() {
+        return orderItems.length;
+    }
+    public int movesRequired() {
+        return 2*pathLength() + 2;
+    }
 }

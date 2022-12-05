@@ -53,7 +53,7 @@ public enum CompassDirection {
      * Gets a compass direction pointing exactly opposite to this one
      * @return the opposite compass direction
      */
-    public CompassDirection getOppositeDirection() {
+    public CompassDirection reverseDirection() {
         return switch (this) {
             case N -> S;
             case NNE -> SSW;

@@ -11,7 +11,12 @@ package uk.ac.ed.inf.jsonutils;
  * @param ticksSinceStartOfCalculation Number of milliseconds past since the beginning of the pathfinding
  *                                     when the move was computed.
  */
-public record MoveForWriting(String orderNo, double fromLongitude, double fromLatitude,
-                      Double angle, double toLongitude, double toLatitude,
-                      int ticksSinceStartOfCalculation) {
+public record MoveForWriting(
+        String orderNo,
+        double fromLongitude,
+        double fromLatitude,
+        Double angle,
+        double toLongitude,
+        double toLatitude,
+        int ticksSinceStartOfCalculation) {
 }
