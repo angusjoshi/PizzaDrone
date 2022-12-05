@@ -73,7 +73,7 @@ public class Order implements Comparable<Order> {
      * and hovering appropriately.
      */
     public List<Move> getDeliveryPath() {
-        if(computedPath == null) {
+        if(computedPath == null || computedPath.size() == 0) {
             return new ArrayList<>();
         }
 

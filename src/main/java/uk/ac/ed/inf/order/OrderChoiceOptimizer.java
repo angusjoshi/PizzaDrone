@@ -51,14 +51,15 @@ public class OrderChoiceOptimizer {
         }
 
         var order = orders.get(i);
-        if(order.movesRequired() > capacityLeft) {
+        int capRequired = order.movesRequired();
+        int nPizzas = order.getNumberOfPizzas();
+
+        if(capRequired > capacityLeft) {
             int res =  helper(i + 1, capacityLeft);
             previouslyComputed.put(previousComputationKey, res);
             return res;
         }
 
-        int capRequired = order.movesRequired();
-        int nPizzas = order.getNumberOfPizzas();
 
         int result = Math.max(
                  helper(i + 1, capacityLeft - capRequired) + nPizzas,
@@ -78,6 +79,13 @@ public class OrderChoiceOptimizer {
 
             int capacityRequired = order.movesRequired();
             int nPizzas = order.getNumberOfPizzas();
+
+            if (i + 1 == orders.size()) {
+                if(capacityLeft >= capacityRequired) {
+                    selectedOrders.add(order);
+                }
+                break;
+            }
 
             PreviousComputationKey didNotAdd = new PreviousComputationKey(i + 1, capacityLeft);
             PreviousComputationKey didAdd = new PreviousComputationKey(i + 1, capacityLeft - capacityRequired);
