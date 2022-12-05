@@ -79,15 +79,18 @@ public class OrderChoiceOptimizer {
             int capacityRequired = order.movesRequired();
             int nPizzas = order.getNumberOfPizzas();
 
-            PreviousComputationKey dp1 = new PreviousComputationKey(i + 1, capacityLeft);
-            PreviousComputationKey dp2 = new PreviousComputationKey(i + 1, capacityLeft - capacityRequired);
+            PreviousComputationKey didNotAdd = new PreviousComputationKey(i + 1, capacityLeft);
+            PreviousComputationKey didAdd = new PreviousComputationKey(i + 1, capacityLeft - capacityRequired);
 
-            if(!previouslyComputed.containsKey(dp2)) {
+            if(!previouslyComputed.containsKey(didAdd)) {
                 continue;
             }
 
             //If including the ith order was better than not including it, add it to the list
-            if(!previouslyComputed.containsKey(dp1) || previouslyComputed.get(dp2) + nPizzas > previouslyComputed.get(dp1)) {
+            if(
+                    !previouslyComputed.containsKey(didNotAdd) ||
+                    previouslyComputed.get(didAdd) + nPizzas > previouslyComputed.get(didNotAdd)
+            ) {
                 capacityLeft -= capacityRequired;
                 selectedOrders.add(order);
             }
